@@ -3,44 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soleplate | Hutema</title>
+  <title>Upper Customizer | Hutema</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="customizer-page">
-  <header class="customizer-header">
-    <a class="brand" href="/">HUTEMA</a>
-<a href="/">← Home</a>
+<body class="customizer-page" data-category="upper">
+  <header class="site-header">
+    <a class="logo" href="/" aria-label="Hutema home">
+      <span class="logo-mark"></span>
+      <span>HUTEMA</span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="main-line.html">Main Line</a>
+      <a class="current" href="customizer.html">Customize</a>
+      <a href="repurpose.html">Repurpose</a>
+      <a href="about.html">About Us</a>
+    </nav>
   </header>
 
-  <nav class="customizer-nav">
-    <a href="upper.html">Upper</a>
-    <a class="active" href="customizer.html">Soleplate</a>
-    <a href="laces.html">Laces</a>
-    <a href="insole.html">Insole</a>
-    <a href="width.html">Width</a>
-    <a href="sock-type.html">Sock type</a>
-    <a href="heel.html">Heel</a>
-    <a href="specialities.html">Specialities</a>
-  </nav>
-
-  <main>
-    <div class="category-pill">◀ <span>FG</span> ▶</div>
+  <main class="customizer-main">
+    <nav class="config-tabs">
+      <a class="active" href="customizer.html">Upper</a>
+      <a href="soleplate.html">Soleplate</a>
+    </nav>
 
     <section class="customizer-layout">
-      <div class="option-grid">
-        <a href="#" class="option">Picture link<br>White FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Speed FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Orange FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Chrome FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Green FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Pink FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Volt FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Teal FG soleplate</a>
-        <a href="#" class="option">Picture link<br>Limited FG soleplate</a>
+      <div class="options-panel">
+        <div class="option-switcher">
+          <button class="arrow-button previous" type="button">◀</button>
+          <strong class="option-name">Leather</strong>
+          <button class="arrow-button next" type="button">▶</button>
+        </div>
+
+        <p class="option-description">
+          Choose the material that feels right for your game.
+        </p>
+
+        <div class="picture-grid"></div>
       </div>
 
-      <div class="boot-preview"><div class="boot-shape"></div></div>
+      <section class="boot-preview">
+        <div class="boot-illustration">
+          <span class="boot-swoosh"></span>
+        </div>
+        <p>Your custom Hutema boot</p>
+      </section>
     </section>
   </main>
+
+  <script src="customizer.js"></script>
 </body>
 </html>

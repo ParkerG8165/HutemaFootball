@@ -3,39 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soleplate | Hutema</title>
+  <title>Soleplate Customizer | Hutema</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="customizer-page">
-  <header class="customizer-header">
-    <a class="brand" href="index.html">HUTEMA</a>
-    <a href="index.html">← Home</a>
+<body class="customizer-page" data-category="soleplate">
+  <header class="site-header">
+    <a class="logo" href="/" aria-label="Hutema home">
+      <span class="logo-mark"></span>
+      <span>HUTEMA</span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="main-line.html">Main Line</a>
+      <a class="current" href="customizer.html">Customize</a>
+      <a href="repurpose.html">Repurpose</a>
+      <a href="about.html">About Us</a>
+    </nav>
   </header>
 
-  <nav class="customizer-nav">
-    <a href="upper.html">Upper</a>
-    <a class="active" href="soleplate.html">Soleplate</a>
-    <a href="laces.html">Laces</a>
-    <a href="insole.html">Insole</a>
-    <a href="width.html">Width</a>
-    <a href="sock-type.html">Sock type</a>
-    <a href="heel.html">Heel</a>
-    <a href="specialities.html">Specialities</a>
-  </nav>
+  <main class="customizer-main">
+    <nav class="config-tabs">
+      <a href="customizer.html">Upper</a>
+      <a class="active" href="soleplate.html">Soleplate</a>
+    </nav>
 
-  <main>
-    <div class="category-pill">◀ <span>FG</span> ▶</div>
     <section class="customizer-layout">
-      <div class="option-grid">
-        <a href="#" class="option">Picture link<br>Firm ground</a>
-        <a href="#" class="option">Picture link<br>Soft ground</a>
-        <a href="#" class="option">Picture link<br>Artificial grass</a>
-        <a href="#" class="option">Picture link<br>Multi-ground</a>
-        <a href="#" class="option">Picture link<br>Turf</a>
-        <a href="#" class="option">Picture link<br>Hybrid studs</a>
+      <div class="options-panel">
+        <div class="option-switcher">
+          <button class="arrow-button previous" type="button">◀</button>
+          <strong class="option-name">FG</strong>
+          <button class="arrow-button next" type="button">▶</button>
+        </div>
+
+        <p class="option-description">
+          Choose a plate designed for the ground you play on.
+        </p>
+
+        <div class="picture-grid"></div>
       </div>
-      <div class="boot-preview"><div class="boot-shape"></div></div>
+
+      <section class="boot-preview">
+        <div class="boot-illustration">
+          <span class="boot-swoosh"></span>
+        </div>
+        <p>Your custom Hutema boot</p>
+      </section>
     </section>
   </main>
+
+  <script src="customizer.js"></script>
 </body>
 </html>
