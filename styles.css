@@ -1,11 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@500;600;700;800;900&display=swap");
-
 :root {
   --cream: #fff1dc;
-  --black: #080808;
-  --blue: #55c7f2;
-  --teal: #004d63;
-  --gold: #edb735;
+  --black: #000000;
+  --blue: #59c8ef;
+  --teal: #004e64;
+  --gold: #efb733;
 }
 
 * {
@@ -15,7 +13,7 @@
 body {
   margin: 0;
   color: var(--black);
-  font-family: Inter, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 a {
@@ -23,42 +21,33 @@ a {
   text-decoration: none;
 }
 
+/* Header and navigation */
+
 .site-header {
-  min-height: 81px;
+  height: 81px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 3.4%;
+  padding: 6px 3.55%;
   background: white;
 }
 
 .logo {
   display: grid;
   justify-items: center;
-  font-size: 0.8rem;
-  font-weight: 800;
-  line-height: 1;
 }
 
-.logo-mark {
-  width: 53px;
-  height: 43px;
-  display: block;
-  margin-bottom: 3px;
-  background: black;
-  border-radius: 54% 46% 46% 53%;
-  clip-path: polygon(
-    45% 0, 62% 8%, 68% 32%, 100% 55%,
-    93% 80%, 66% 85%, 50% 68%, 32% 96%,
-    5% 90%, 0 69%, 20% 48%, 28% 14%
-  );
+.brand-image {
+  width: 68px;
+  height: 66px;
+  object-fit: contain;
 }
 
 .main-nav {
   display: flex;
-  gap: clamp(18px, 2vw, 34px);
-  font-size: clamp(0.85rem, 1.25vw, 1.35rem);
-  font-weight: 800;
+  gap: clamp(19px, 2vw, 34px);
+  font-size: clamp(1rem, 1.75vw, 1.5rem);
+  font-weight: 700;
 }
 
 .main-nav a:hover,
@@ -66,7 +55,7 @@ a {
   color: #147ea6;
 }
 
-/* Home page */
+/* Homepage */
 
 .home-page {
   min-height: 100vh;
@@ -78,48 +67,83 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60px 20px 45px;
+  justify-content: flex-start;
+  padding: 88px 20px 45px;
   text-align: center;
 }
 
 .home-hero h1 {
   max-width: 900px;
   margin: 0;
-  font-size: clamp(3.5rem, 8vw, 7.3rem);
-  line-height: 1.07;
-  letter-spacing: -0.08em;
+  font-size: clamp(4rem, 7.7vw, 6.1rem);
+  line-height: 1.22;
+  letter-spacing: -0.075em;
+  font-weight: 900;
 }
 
 .home-hero h1 span {
   display: block;
-  letter-spacing: -0.04em;
+  line-height: 0.98;
 }
 
 .hero-tagline {
-  margin: 12px 0 0;
-  font-family: "DM Serif Display", Georgia, serif;
-  font-size: clamp(1.8rem, 3.3vw, 3rem);
+  margin: 7px 0 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(2rem, 3.45vw, 3rem);
 }
 
 .hero-action {
-  margin-top: clamp(65px, 13vh, 150px);
+  margin-top: clamp(85px, 14vh, 132px);
 }
 
 .hero-action p {
   margin: 0 0 29px;
-  font-family: "DM Serif Display", Georgia, serif;
-  font-size: clamp(1.5rem, 2.4vw, 2.3rem);
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(1.7rem, 2.4vw, 2.3rem);
   font-style: italic;
 }
 
 .start-button {
   display: inline-block;
-  padding: 16px 70px;
-  border-radius: 28px;
+  min-width: 390px;
+  padding: 16px 44px;
+  border-radius: 29px;
   background: var(--blue);
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-size: clamp(1.55rem, 3.3vw, 2.25rem);
   font-weight: 900;
+}
+
+.start-button:hover {
+  background: #2eb9ed;
+  transform: translateY(-2px);
+}
+
+/* Main Line, Repurpose, and About pages */
+
+.simple-page {
+  min-height: 100vh;
+  background: var(--cream);
+}
+
+.simple-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 12vh 8vw;
+  text-align: center;
+}
+
+.simple-content h1 {
+  margin: 0;
+  font-size: clamp(3.1rem, 7vw, 6.3rem);
+  letter-spacing: -0.07em;
+}
+
+.simple-content p {
+  max-width: 650px;
+  margin: 22px auto 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  line-height: 1.25;
 }
 
 /* Customizer pages */
@@ -136,13 +160,13 @@ a {
 .config-tabs {
   display: flex;
   gap: clamp(35px, 6vw, 93px);
-  margin-bottom: 58px;
+  margin-bottom: 60px;
 }
 
 .config-tabs a {
-  font-size: clamp(2.1rem, 3.1vw, 3.2rem);
+  font-size: clamp(2.5rem, 4.2vw, 3.35rem);
   font-weight: 800;
-  letter-spacing: -0.07em;
+  letter-spacing: -0.065em;
 }
 
 .config-tabs a.active {
@@ -187,7 +211,6 @@ a {
 }
 
 .option-description {
-  min-height: 24px;
   margin: 14px 0 17px;
   font-size: 0.88rem;
 }
@@ -199,7 +222,7 @@ a {
 }
 
 .picture-card {
-  min-height: 144px;
+  min-height: 145px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -207,7 +230,6 @@ a {
   border: 3px solid transparent;
   background: var(--teal);
   color: white;
-  text-align: left;
   cursor: pointer;
 }
 
@@ -239,39 +261,10 @@ a {
   justify-content: center;
 }
 
-.boot-illustration {
-  width: min(34vw, 420px);
-  height: 182px;
-  position: relative;
-  border-radius: 52% 46% 24% 20% / 73% 64% 28% 29%;
-  background: linear-gradient(140deg, #f5ffff, #9dd0d8 55%, #478d97);
-  transform: rotate(-8deg);
-  box-shadow: inset -25px -17px 30px rgba(0, 53, 69, 0.34),
-    0 28px 23px rgba(61, 77, 74, 0.2);
-}
-
-.boot-illustration::before {
-  content: "";
-  position: absolute;
-  width: 38%;
-  height: 49%;
-  top: -30%;
-  left: 11%;
-  border-radius: 55% 42% 52% 38%;
-  background: #e8f4f2;
-  transform: rotate(-20deg);
-}
-
-.boot-swoosh {
-  position: absolute;
-  z-index: 2;
-  width: 105px;
-  height: 38px;
-  top: 47%;
-  left: 29%;
-  border-bottom: 9px solid #384d50;
-  border-radius: 0 0 100% 12%;
-  transform: rotate(-13deg) skew(-28deg);
+.boot-image {
+  width: min(40vw, 470px);
+  height: auto;
+  object-fit: contain;
 }
 
 .boot-preview p {
@@ -283,15 +276,17 @@ a {
   letter-spacing: 0.09em;
 }
 
+/* Phone layout */
+
 @media (max-width: 760px) {
   .site-header {
-    min-height: 72px;
+    height: 72px;
     padding: 8px 5%;
   }
 
-  .logo-mark {
-    width: 42px;
-    height: 34px;
+  .brand-image {
+    width: 54px;
+    height: 52px;
   }
 
   .main-nav {
@@ -302,6 +297,16 @@ a {
   .main-nav a:nth-child(1),
   .main-nav a:nth-child(3) {
     display: none;
+  }
+
+  .home-hero {
+    min-height: calc(100vh - 72px);
+    padding-top: 80px;
+  }
+
+  .start-button {
+    min-width: 0;
+    padding: 15px 36px;
   }
 
   .customizer-main {
@@ -327,8 +332,7 @@ a {
     order: -1;
   }
 
-  .boot-illustration {
-    width: min(80vw, 350px);
-    height: 150px;
+  .boot-image {
+    width: min(85vw, 430px);
   }
 }
