@@ -1,52 +1,191 @@
-const settings = {
-  upper: {
-    options: ["Leather", "Synthetic", "Synthetic Leather"],
-    labels: ["Classic touch", "Speed fit", "Hybrid feel"]
-  },
-  soleplate: {
-    options: ["FG", "AG", "SG", "TF"],
-    labels: ["Firm Ground", "Artificial Grass", "Soft Ground", "Turf"]
-  }
-};
+/* -------------------------
+   CURRENT SELECTIONS
+------------------------- */
 
-const category = document.body.dataset.category;
-const config = settings[category];
-const name = document.querySelector(".option-name");
-const grid = document.querySelector(".picture-grid");
+let selectedUpper = "Not Selected";
+let selectedSole = "Not Selected";
 
-let current = 0;
+let upperColor = "#111111";
+let soleColor = "#ffffff";
 
-function render() {
-  const option = config.options[current];
-  const label = config.labels[current];
 
-  name.textContent = option;
+/* -------------------------
+   UPPER / SOLE BUTTONS
+------------------------- */
 
-  grid.innerHTML = Array.from({ length: 9 }, (_, index) => `
-    <button class="picture-card${index === 0 ? " selected" : ""}" type="button">
-      <span>Picture link</span>
-      <small>${option} · ${label}</small>
-    </button>
-  `).join("");
+const optionButtons = document.querySelectorAll(".option-button");
+
+optionButtons.forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        const type = button.dataset.type;
+        const option = button.dataset.option;
+
+
+        /* UPPER */
+
+        if (type === "upper") {
+
+            selectedUpper = option;
+
+            // Remove selected class from other upper buttons
+            document.querySelectorAll(
+                '.option-button[data-type="upper"]'
+            ).forEach(function(btn) {
+
+                btn.classList.remove("selected");
+
+            });
+
+            // Select this button
+            button.classList.add("selected");
+
+            // Update report
+            document.getElementById(
+                "reportUpperBlock"
+            ).textContent = selectedUpper;
+
+        }
+
+
+        /* SOLE */
+
+        if (type === "sole") {
+
+            selectedSole = option;
+
+            // Remove selected class from other sole buttons
+            document.querySelectorAll(
+                '.option-button[data-type="sole"]'
+            ).forEach(function(btn) {
+
+                btn.classList.remove("selected");
+
+            });
+
+            // Select this button
+            button.classList.add("selected");
+
+            // Update report
+            document.getElementById(
+                "reportSole"
+            ).textContent = selectedSole;
+
+        }
+
+        updateCombination();
+
+    });
+
+});
+
+
+/* -------------------------
+   UPPER COLOR
+------------------------- */
+
+const upperColorPicker =
+    document.getElementById("upperColor");
+
+upperColorPicker.addEventListener("input", function() {
+
+    upperColor = upperColorPicker.value;
+
+    // Change preview
+    document.getElementById(
+        "upperPreview"
+    ).style.backgroundColor = upperColor;
+
+
+    // Update color text
+    document.getElementById(
+        "upperColorValue"
+    ).textContent = upperColor.toUpperCase();
+
+
+    // Update report
+    document.getElementById(
+        "reportUpperColor"
+    ).textContent = upperColor.toUpperCase();
+
+});
+
+
+/* -------------------------
+   SOLE COLOR
+------------------------- */
+
+const soleColorPicker =
+    document.getElementById("soleColor");
+
+soleColorPicker.addEventListener("input", function() {
+
+    soleColor = soleColorPicker.value;
+
+    // Change preview
+    document.getElementById(
+        "solePreview"
+    ).style.backgroundColor = soleColor;
+
+
+    // Update color text
+    document.getElementById(
+        "soleColorValue"
+    ).textContent = soleColor.toUpperCase();
+
+
+    // Update report
+    document.getElementById(
+        "reportSoleColor"
+    ).textContent = soleColor.toUpperCase();
+
+});
+
+
+/* -------------------------
+   COMBINATION REPORT
+------------------------- */
+
+function updateCombination() {
+
+    const combinationText =
+        document.getElementById("combinationText");
+
+
+    if (
+        selectedUpper === "Not Selected" &&
+        selectedSole === "Not Selected"
+    ) {
+
+        combinationText.textContent =
+            "Select an upper and soleplate configuration.";
+
+        return;
+    }
+
+
+    combinationText.textContent =
+        upperColor.toUpperCase() +
+        " " +
+        selectedUpper +
+        " upper with a " +
+        soleColor.toUpperCase() +
+        " " +
+        selectedSole +
+        " soleplate.";
+
 }
 
-document.querySelector(".previous").addEventListener("click", () => {
-  current = (current - 1 + config.options.length) % config.options.length;
-  render();
-});
 
-document.querySelector(".next").addEventListener("click", () => {
-  current = (current + 1) % config.options.length;
-  render();
-});
+/* -------------------------
+   INITIAL PREVIEW
+------------------------- */
 
-grid.addEventListener("click", (event) => {
-  const card = event.target.closest(".picture-card");
+document.getElementById(
+    "upperPreview"
+).style.backgroundColor = upperColor;
 
-  if (!card) return;
-
-  grid.querySelector(".selected")?.classList.remove("selected");
-  card.classList.add("selected");
-});
-
-render();
+document.getElementById(
+    "solePreview"
+).style.backgroundColor = soleColor;
