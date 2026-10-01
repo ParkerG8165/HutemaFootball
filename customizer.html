@@ -1,273 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Hutema | Customize</title>
-
-    <link rel="stylesheet" href="customize.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upper Customizer | Hutema</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+<body class="customizer-page" data-category="upper">
+  <header class="site-header">
+    <a class="logo" href="/" aria-label="Hutema home">
+      <span class="logo-mark"></span>
+      <span>HUTEMA</span>
+    </a>
 
-<body>
+    <nav class="main-nav">
+      <a href="main-line.html">Main Line</a>
+      <a class="current" href="customizer.html">Customize</a>
+      <a href="repurpose.html">Repurpose</a>
+      <a href="about.html">About Us</a>
+    </nav>
+  </header>
 
-    <header>
-        <div class="logo">
-            HUTEMA
+  <main class="customizer-main">
+    <nav class="config-tabs">
+      <a class="active" href="customizer.html">Upper</a>
+      <a href="soleplate.html">Soleplate</a>
+    </nav>
+
+    <section class="customizer-layout">
+      <div class="options-panel">
+        <div class="option-switcher">
+          <button class="arrow-button previous" type="button">◀</button>
+          <strong class="option-name">Leather</strong>
+          <button class="arrow-button next" type="button">▶</button>
         </div>
 
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="customize.html" class="active">Customize</a>
-        </nav>
-    </header>
-
-
-    <main class="customizer">
-
-        <!-- LEFT SIDE -->
-        <section class="controls">
-
-            <h1>Customize Your Boot</h1>
-
-            <!-- UPPER -->
-            <div class="custom-section">
-
-                <h2>Upper</h2>
-
-                <p class="section-description">
-                    Choose your upper block configuration.
-                </p>
-
-                <div class="option-grid">
-
-                    <button
-                        class="option-button"
-                        data-type="upper"
-                        data-option="Strike Zone">
-                        Strike Zone
-                    </button>
-
-                    <button
-                        class="option-button"
-                        data-type="upper"
-                        data-option="Control Zone">
-                        Control Zone
-                    </button>
-
-                    <button
-                        class="option-button"
-                        data-type="upper"
-                        data-option="Speed Zone">
-                        Speed Zone
-                    </button>
-
-                    <button
-                        class="option-button"
-                        data-type="upper"
-                        data-option="Full Texture">
-                        Full Texture
-                    </button>
-
-                </div>
-
-                <!-- UPPER COLOR -->
-                <div class="color-selection">
-
-                    <label for="upperColor">
-                        Upper Color
-                    </label>
-
-                    <div class="color-picker-row">
-
-                        <input
-                            type="color"
-                            id="upperColor"
-                            value="#111111">
-
-                        <span id="upperColorValue">
-                            #111111
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- SOLEPLATE -->
-            <div class="custom-section">
-
-                <h2>Soleplate</h2>
-
-                <p class="section-description">
-                    Choose your soleplate configuration.
-                </p>
-
-                <div class="option-grid">
-
-                    <button
-                        class="option-button"
-                        data-type="sole"
-                        data-option="Speed Plate">
-                        Speed Plate
-                    </button>
-
-                    <button
-                        class="option-button"
-                        data-type="sole"
-                        data-option="Control Plate">
-                        Control Plate
-                    </button>
-
-                    <button
-                        class="option-button"
-                        data-type="sole"
-                        data-option="Agility Plate">
-                        Agility Plate
-                    </button>
-
-                    <button
-                        class="option-button"
-                        data-type="sole"
-                        data-option="Power Plate">
-                        Power Plate
-                    </button>
-
-                </div>
-
-                <!-- SOLE COLOR -->
-                <div class="color-selection">
-
-                    <label for="soleColor">
-                        Soleplate Color
-                    </label>
-
-                    <div class="color-picker-row">
-
-                        <input
-                            type="color"
-                            id="soleColor"
-                            value="#ffffff">
-
-                        <span id="soleColorValue">
-                            #ffffff
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- CENTER: BOOT PREVIEW -->
-        <section class="preview">
-
-            <h2>Preview</h2>
-
-            <div class="boot-preview">
-
-                <!-- Replace these with your actual boot images/SVG later -->
-                <div
-                    id="upperPreview"
-                    class="boot-upper">
-
-                    UPPER
-
-                </div>
-
-                <div
-                    id="solePreview"
-                    class="boot-sole">
-
-                    SOLEPLATE
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- RIGHT: REPORT -->
-        <aside class="report">
-
-            <h2>Build Report</h2>
-
-            <div class="report-line"></div>
-
-            <div class="report-section">
-
-                <h3>UPPER</h3>
-
-                <p>
-                    <strong>Texture:</strong>
-                    <span id="reportTexture">
-                        Standard Upper
-                    </span>
-                </p>
-
-                <p>
-                    <strong>Block:</strong>
-                    <span id="reportUpperBlock">
-                        Not Selected
-                    </span>
-                </p>
-
-                <p>
-                    <strong>Color:</strong>
-                    <span id="reportUpperColor">
-                        #111111
-                    </span>
-                </p>
-
-            </div>
-
-
-            <div class="report-section">
-
-                <h3>SOLEPLATE</h3>
-
-                <p>
-                    <strong>Choice:</strong>
-                    <span id="reportSole">
-                        Not Selected
-                    </span>
-                </p>
-
-                <p>
-                    <strong>Color:</strong>
-                    <span id="reportSoleColor">
-                        #FFFFFF
-                    </span>
-                </p>
-
-            </div>
-
-
-            <div class="report-line"></div>
-
-
-            <div class="report-section combination">
-
-                <h3>COMBINATION</h3>
-
-                <p id="combinationText">
-                    Select an upper and soleplate configuration.
-                </p>
-
-            </div>
-
-        </aside>
-
-    </main>
-
-
-    <script src="customize.js"></script>
-
+        <p class="option-description">
+          Choose the material that feels right for your game.
+        </p>
+
+        <div class="picture-grid"></div>
+      </div>
+
+      <section class="boot-preview">
+        <div class="boot-illustration">
+          <span class="boot-swoosh"></span>
+        </div>
+        <p>Your custom Hutema boot</p>
+      </section>
+    </section>
+  </main>
+
+  <script src="customizer.js"></script>
 </body>
 </html>
