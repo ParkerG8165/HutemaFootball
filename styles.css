@@ -175,9 +175,9 @@ a {
 
 .customizer-layout {
   display: grid;
-  grid-template-columns: minmax(460px, 1fr) minmax(360px, 0.72fr);
-  gap: 6vw;
-  align-items: center;
+  grid-template-columns: 1fr 1fr 300px;
+  gap: 30px;
+  align-items: start;
 }
 
 .option-switcher {
@@ -276,7 +276,110 @@ a {
   letter-spacing: 0.09em;
 }
 
-/* Phone layout */
+/* =========================================
+   CUSTOMIZATION COLOR PICKER (SWATCHES)
+   ========================================= */
+
+.color-picker-area {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.color-picker-area label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.color-value {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.color-swatches-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.color-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  outline: 1px solid #ccc;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.color-swatch.active {
+  border-color: #ffffff;
+  outline: 2px solid var(--black);
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================
+   CUSTOMIZATION REPORT
+   ========================================= */
+
+.customization-report {
+  width: 300px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  align-self: start;
+}
+
+.customization-report h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.customization-report h3 {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+.customization-report p {
+  margin: 8px 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.customization-report strong {
+  font-weight: 600;
+}
+
+.report-divider {
+  height: 1px;
+  background: #ddd;
+  margin: 20px 0;
+}
+
+/* =========================================
+   RESPONSIVE LAYOUTS
+   ========================================= */
+
+@media (max-width: 1000px) {
+  .customizer-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .customization-report {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
 
 @media (max-width: 760px) {
   .site-header {
@@ -322,6 +425,10 @@ a {
     gap: 30px;
   }
 
+  .customization-report {
+    grid-column: auto;
+  }
+
   .picture-card {
     min-height: 100px;
     padding: 9px;
@@ -335,123 +442,4 @@ a {
   .boot-image {
     width: min(85vw, 430px);
   }
-}
-/* =========================================
-   CUSTOMIZATION COLOR PICKER
-   ========================================= */
-
-.color-picker-area {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
-}
-
-.color-picker-area label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.color-picker-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.color-picker-row input[type="color"] {
-  width: 55px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid #ccc;
-  background: white;
-  cursor: pointer;
-}
-
-.color-value {
-  font-family: monospace;
-  font-size: 14px;
-}
-
-
-/* =========================================
-   CUSTOMIZATION REPORT
-   ========================================= */
-
-.customization-report {
-  width: 300px;
-  padding: 28px;
-
-  background: #ffffff;
-  border: 1px solid #ddd;
-
-  align-self: start;
-}
-
-.customization-report h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-.customization-report h3 {
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  margin-top: 20px;
-  margin-bottom: 12px;
-}
-
-.customization-report p {
-  margin: 8px 0;
-  line-height: 1.5;
-  font-size: 14px;
-}
-
-.customization-report strong {
-  font-weight: 600;
-}
-
-.report-divider {
-  height: 1px;
-  background: #ddd;
-  margin: 20px 0;
-}
-
-
-/* =========================================
-   KEEP REPORT ON RIGHT
-   ========================================= */
-
-.customizer-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr 300px;
-  gap: 30px;
-}
-
-
-/* =========================================
-   MOBILE
-   ========================================= */
-
-@media (max-width: 1000px) {
-
-  .customizer-layout {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .customization-report {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
-
-}
-
-@media (max-width: 700px) {
-
-  .customizer-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .customization-report {
-    grid-column: auto;
-  }
-
 }

@@ -1,11 +1,40 @@
+/* -----------------------------
+   COLOR MAP & CONFIGURATION
+----------------------------- */
+
+const COLOR_MAP = [
+  { name: "Black", hex: "#000000" },
+  { name: "White", hex: "#FFFFFF" },
+  { name: "Red", hex: "#E53E3E" },
+  { name: "Blue", hex: "#3182CE" },
+  { name: "Navy", hex: "#1A202C" },
+  { name: "Gold", hex: "#D69E2E" },
+  { name: "Silver", hex: "#A0AEC0" },
+  { name: "Neon Yellow", hex: "#ECC94B" },
+  { name: "Emerald Green", hex: "#38A169" }
+];
+
 const settings = {
   upper: {
     options: ["Leather", "Synthetic", "Synthetic Leather"],
-    labels: ["Classic touch", "Speed fit", "Hybrid feel"]
+    labels: ["Classic touch", "Speed fit", "Hybrid feel"],
+    blocks: [
+      "High Sock Laces",
+      "Low Sock Laces",
+      "Mid Sock Laces",
+      "High Sock Laceless",
+      "Low Sock Laceless",
+      "Mid Sock Laceless"
+    ]
   },
   soleplate: {
-    options: ["FG", "AG", "SG", "TF"],
-    labels: ["Firm Ground", "Artificial Grass", "Soft Ground", "Turf"]
+    options: ["FG", "AG", "TF", "SG"],
+    labels: ["Firm Ground", "Artificial Grass", "Turf", "Soft Ground"],
+    blocks: [
+      "Accuracy/Control",
+      "Speed",
+      "Defense"
+    ]
   }
 };
 
@@ -17,98 +46,114 @@ const grid = document.querySelector(".picture-grid");
 
 let current = 0;
 
-
 /* -----------------------------
-   SAVE CUSTOMIZATION
+   PERSISTENT STORAGE (localStorage)
 ----------------------------- */
 
-let selectedUpper = {
-  texture: "Leather",
-  block: "Block 1",
-  color: "#000000"
-};
+function getStoredSelections() {
+  const upperDefault = {
+    texture: "Leather",
+    block: settings.upper.blocks[0],
+    colorName: "Black",
+    colorHex: "#000000"
+  };
 
-let selectedSoleplate = {
-  choice: "Not selected",
-  block: "Block 1",
-  color: "#ffffff"
-};
+  const soleplateDefault = {
+    choice: "FG",
+    block: settings.soleplate.blocks[0],
+    colorName: "White",
+    colorHex: "#FFFFFF"
+  };
 
+  const upper = JSON.parse(localStorage.getItem("hutema_selectedUpper")) || upperDefault;
+  const soleplate = JSON.parse(localStorage.getItem("hutema_selectedSoleplate")) || soleplateDefault;
+
+  return { upper, soleplate };
+}
+
+let { upper: selectedUpper, soleplate: selectedSoleplate } = getStoredSelections();
+
+function saveSelections() {
+  localStorage.setItem("hutema_selectedUpper", JSON.stringify(selectedUpper));
+  localStorage.setItem("hutema_selectedSoleplate", JSON.stringify(selectedSoleplate));
+}
 
 /* -----------------------------
-   CREATE COLOR PICKER
+   CREATE COLOR PICKER SWATCHES
 ----------------------------- */
 
 function createColorPicker() {
-
   let existing = document.querySelector(".color-picker-area");
-
   if (existing) {
     existing.remove();
   }
 
-  const colorArea = document.createElement("div");
+  const currentColorHex = category === "upper" ? selectedUpper.colorHex : selectedSoleplate.colorHex;
+  const currentColorName = category === "upper" ? selectedUpper.colorName : selectedSoleplate.colorName;
 
+  const colorArea = document.createElement("div");
   colorArea.className = "color-picker-area";
 
+  const swatchesHTML = COLOR_MAP.map(c => `
+    <button 
+      type="button" 
+      class="color-swatch${c.hex.toUpperCase() === currentColorHex.toUpperCase() ? " active" : ""}" 
+      data-name="${c.name}" 
+      data-hex="${c.hex}"
+      style="background-color: ${c.hex};"
+      title="${c.name}"
+    ></button>
+  `).join("");
+
   colorArea.innerHTML = `
-    <label for="custom-color">
-      ${category === "upper" ? "Upper Color" : "Soleplate Color"}
+    <label>
+      ${category === "upper" ? "Upper Color" : "Soleplate Color"}: 
+      <strong class="color-value">${currentColorName}</strong>
     </label>
-
-    <div class="color-picker-row">
-      <input
-        id="custom-color"
-        type="color"
-        value="${
-          category === "upper"
-            ? selectedUpper.color
-            : selectedSoleplate.color
-        }"
-      >
-
-      <span class="color-value">
-        ${
-          category === "upper"
-            ? selectedUpper.color.toUpperCase()
-            : selectedSoleplate.color.toUpperCase()
-        }
-      </span>
+    <div class="color-swatches-grid">
+      ${swatchesHTML}
     </div>
   `;
 
   document.querySelector(".options-panel").appendChild(colorArea);
 
-  const picker = document.querySelector("#custom-color");
-  const colorValue = document.querySelector(".color-value");
+  const swatches = colorArea.querySelectorAll(".color-swatch");
+  const colorValue = colorArea.querySelector(".color-value");
 
-  picker.addEventListener("input", () => {
+  swatches.forEach(swatch => {
+    swatch.addEventListener("click", () => {
+      colorArea.querySelector(".color-swatch.active")?.classList.remove("active");
+      swatch.classList.add("active");
 
-    colorValue.textContent = picker.value.toUpperCase();
+      const name = swatch.dataset.name;
+      const hex = swatch.dataset.hex;
 
-    if (category === "upper") {
-      selectedUpper.color = picker.value;
-    } else {
-      selectedSoleplate.color = picker.value;
-    }
+      colorValue.textContent = name;
 
-    updateReport();
+      if (category === "upper") {
+        selectedUpper.colorName = name;
+        selectedUpper.colorHex = hex;
+      } else {
+        selectedSoleplate.colorName = name;
+        selectedSoleplate.colorHex = hex;
+      }
+
+      saveSelections();
+      updateReport();
+    });
   });
 }
-
 
 /* -----------------------------
    REPORT
 ----------------------------- */
 
 function createReport() {
-
   if (document.querySelector(".customization-report")) {
     return;
   }
 
   const report = document.createElement("aside");
-
   report.className = "customization-report";
 
   report.innerHTML = `
@@ -117,251 +162,143 @@ function createReport() {
     <div class="report-divider"></div>
 
     <h3>UPPER</h3>
-
-    <p>
-      <strong>Texture:</strong>
-      <span id="report-upper-texture">Leather</span>
-    </p>
-
-    <p>
-      <strong>Block:</strong>
-      <span id="report-upper-block">Block 1</span>
-    </p>
-
-    <p>
-      <strong>Color:</strong>
-      <span id="report-upper-color">#000000</span>
-    </p>
+    <p><strong>Texture:</strong> <span id="report-upper-texture"></span></p>
+    <p><strong>Block:</strong> <span id="report-upper-block"></span></p>
+    <p><strong>Color:</strong> <span id="report-upper-color"></span></p>
 
     <div class="report-divider"></div>
 
     <h3>SOLEPLATE</h3>
-
-    <p>
-      <strong>Choice:</strong>
-      <span id="report-sole-choice">Not selected</span>
-    </p>
-
-    <p>
-      <strong>Block:</strong>
-      <span id="report-sole-block">Block 1</span>
-    </p>
-
-    <p>
-      <strong>Color:</strong>
-      <span id="report-sole-color">#FFFFFF</span>
-    </p>
+    <p><strong>Choice:</strong> <span id="report-sole-choice"></span></p>
+    <p><strong>Block:</strong> <span id="report-sole-block"></span></p>
+    <p><strong>Color:</strong> <span id="report-sole-color"></span></p>
 
     <div class="report-divider"></div>
 
     <h3>COMBINATION</h3>
-
-    <p id="report-combination">
-      Leather upper with Block 1 in #000000, paired with a Not selected soleplate in #FFFFFF.
-    </p>
+    <p id="report-combination"></p>
   `;
 
   document.querySelector(".customizer-layout").appendChild(report);
 }
-
 
 /* -----------------------------
    UPDATE REPORT
 ----------------------------- */
 
 function updateReport() {
+  const upperTexture = document.querySelector("#report-upper-texture");
+  const upperBlock = document.querySelector("#report-upper-block");
+  const upperColor = document.querySelector("#report-upper-color");
 
-  const upperTexture =
-    document.querySelector("#report-upper-texture");
+  const soleChoice = document.querySelector("#report-sole-choice");
+  const soleBlock = document.querySelector("#report-sole-block");
+  const soleColor = document.querySelector("#report-sole-color");
 
-  const upperBlock =
-    document.querySelector("#report-upper-block");
+  const combination = document.querySelector("#report-combination");
 
-  const upperColor =
-    document.querySelector("#report-upper-color");
+  upperTexture.textContent = selectedUpper.texture;
+  upperBlock.textContent = selectedUpper.block;
+  upperColor.textContent = selectedUpper.colorName;
 
-  const soleChoice =
-    document.querySelector("#report-sole-choice");
+  soleChoice.textContent = selectedSoleplate.choice;
+  soleBlock.textContent = selectedSoleplate.block;
+  soleColor.textContent = selectedSoleplate.colorName;
 
-  const soleBlock =
-    document.querySelector("#report-sole-block");
-
-  const soleColor =
-    document.querySelector("#report-sole-color");
-
-  const combination =
-    document.querySelector("#report-combination");
-
-
-  upperTexture.textContent =
-    selectedUpper.texture;
-
-  upperBlock.textContent =
-    selectedUpper.block;
-
-  upperColor.textContent =
-    selectedUpper.color.toUpperCase();
-
-
-  soleChoice.textContent =
-    selectedSoleplate.choice;
-
-  soleBlock.textContent =
-    selectedSoleplate.block;
-
-  soleColor.textContent =
-    selectedSoleplate.color.toUpperCase();
-
-
-  combination.textContent =
-    `${selectedUpper.texture} upper with ${selectedUpper.block} in ${selectedUpper.color.toUpperCase()}, paired with a ${selectedSoleplate.choice} soleplate in ${selectedSoleplate.color.toUpperCase()}.`;
+  combination.textContent = 
+    `${selectedUpper.texture} upper with ${selectedUpper.block} in ${selectedUpper.colorName}, paired with a ${selectedSoleplate.choice} soleplate (${selectedSoleplate.block}) in ${selectedSoleplate.colorName}.`;
 }
-
 
 /* -----------------------------
    RENDER OPTIONS
 ----------------------------- */
 
 function render() {
-
   const option = config.options[current];
   const label = config.labels[current];
 
   name.textContent = option;
 
+  /* Dynamically generate cards for each defined block */
+  const activeBlock = category === "upper" ? selectedUpper.block : selectedSoleplate.block;
 
-  grid.innerHTML = Array.from(
-    { length: 9 },
-    (_, index) => `
+  grid.innerHTML = config.blocks
+    .map(
+      (blockName) => `
       <button
-        class="picture-card${index === 0 ? " selected" : ""}"
+        class="picture-card${blockName === activeBlock ? " selected" : ""}"
         type="button"
-        data-block="Block ${index + 1}"
+        data-block="${blockName}"
       >
-        <span>Picture link</span>
+        <span>${blockName}</span>
         <small>${option} · ${label}</small>
       </button>
     `
-  ).join("");
+    )
+    .join("");
 
-
-  /*
-    Remember which main option is being viewed.
-  */
-
+  /* Remember choice */
   if (category === "upper") {
-
     selectedUpper.texture = option;
-
   } else if (category === "soleplate") {
-
     selectedSoleplate.choice = option;
-
   }
 
-
-  /*
-    Block 1 is selected by default.
-  */
-
-  if (category === "upper") {
-
-    selectedUpper.block = "Block 1";
-
-  } else {
-
-    selectedSoleplate.block = "Block 1";
-
-  }
-
-
-  /*
-    Add the color picker.
-  */
-
+  saveSelections();
   createColorPicker();
-
   updateReport();
 }
 
-
 /* -----------------------------
-   PREVIOUS BUTTON
+   PREVIOUS / NEXT BUTTONS
 ----------------------------- */
 
 document.querySelector(".previous").addEventListener("click", () => {
-
-  current =
-    (current - 1 + config.options.length) %
-    config.options.length;
-
+  current = (current - 1 + config.options.length) % config.options.length;
   render();
 });
-
-
-/* -----------------------------
-   NEXT BUTTON
------------------------------ */
 
 document.querySelector(".next").addEventListener("click", () => {
-
-  current =
-    (current + 1) %
-    config.options.length;
-
+  current = (current + 1) % config.options.length;
   render();
 });
-
 
 /* -----------------------------
    SELECT A BLOCK
 ----------------------------- */
 
 grid.addEventListener("click", (event) => {
-
-  const card =
-    event.target.closest(".picture-card");
-
+  const card = event.target.closest(".picture-card");
   if (!card) return;
 
-
-  grid
-    .querySelector(".selected")
-    ?.classList.remove("selected");
-
+  grid.querySelector(".selected")?.classList.remove("selected");
   card.classList.add("selected");
 
-
-  const block =
-    card.dataset.block;
-
+  const block = card.dataset.block;
 
   if (category === "upper") {
-
     selectedUpper.block = block;
-
   } else {
-
     selectedSoleplate.block = block;
-
   }
 
-
-  /*
-    Show/update color picker when
-    a block is selected.
-  */
-
+  saveSelections();
   createColorPicker();
-
   updateReport();
 });
 
-
 /* -----------------------------
-   START
+   INITIALIZE
 ----------------------------- */
 
-createReport();
+// Set starting option slider index to match stored value if returning to page
+if (category === "upper") {
+  const index = config.options.indexOf(selectedUpper.texture);
+  if (index !== -1) current = index;
+} else if (category === "soleplate") {
+  const index = config.options.indexOf(selectedSoleplate.choice);
+  if (index !== -1) current = index;
+}
 
+createReport();
 render();
