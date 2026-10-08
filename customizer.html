@@ -1,56 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upper Customizer | Hutema</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hutema Customizer - Shoe Customization Engine</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="customizer-page" data-category="upper">
-  <header class="site-header">
-    <a class="logo" href="/" aria-label="Hutema home">
-      <span class="logo-mark"></span>
-      <span>HUTEMA</span>
-    </a>
 
-    <nav class="main-nav">
-      <a href="main-line.html">Main Line</a>
-      <a class="current" href="customizer.html">Customize</a>
-      <a href="repurpose.html">Repurpose</a>
-      <a href="about.html">About Us</a>
+<!-- data-category defines initial active customizer context -->
+<body data-category="upper">
+
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="logo">
+      <a href="/">HUTEMA</a>
+    </div>
+    <nav class="category-tabs">
+      <a href="customizer.html" class="tab-link active">Upper</a>
+      <a href="soleplate.html" class="tab-link">Soleplate</a>
     </nav>
   </header>
 
-  <main class="customizer-main">
-    <nav class="config-tabs">
-      <a class="active" href="customizer.html">Upper</a>
-      <a href="soleplate.html">Soleplate</a>
-    </nav>
+  <!-- Main Customizer Layout Workspace -->
+  <main class="customizer-layout">
 
-    <section class="customizer-layout">
-      <div class="options-panel">
-        <div class="option-switcher">
-          <button class="arrow-button previous" type="button">◀</button>
-          <strong class="option-name">Leather</strong>
-          <button class="arrow-button next" type="button">▶</button>
-        </div>
+    <!-- 3D Model WebGL Canvas Section -->
+    <section class="boot-preview">
+      <div 
+        id="webgl-container" 
+        style="width: 100%; height: 480px; position: relative; background: #f8fafc; border-radius: 12px; overflow: hidden;"
+      ></div>
+      <p class="preview-instructions">Drag to rotate 360° • Scroll to zoom</p>
+    </section>
 
-        <p class="option-description">
-          Choose the material that feels right for your game.
-        </p>
-
-        <div class="picture-grid"></div>
+    <!-- Interactive Customization Panel -->
+    <section class="options-panel">
+      <!-- Section Switcher Header -->
+      <div class="controls-header">
+        <button class="previous" type="button" aria-label="Previous Option">‹</button>
+        <h2 class="option-name">Leather</h2>
+        <button class="next" type="button" aria-label="Next Option">›</button>
       </div>
 
-      <section class="boot-preview">
-        <div class="boot-illustration">
-          <span class="boot-swoosh"></span>
-        </div>
-        <p>Your custom Hutema boot</p>
-      </section>
+      <!-- Dynamically Populated Material / Color Grid -->
+      <div class="picture-grid"></div>
+
+      <!-- Customization Summary Output -->
+      <div class="customizer-summary" style="margin-top: 2rem;">
+        <h3>Configuration Summary</h3>
+        <div id="summary-details"></div>
+      </div>
     </section>
+
   </main>
 
+  <!-- External 3D Libraries (Must precede customizer.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Core Customizer Application Logic -->
   <script src="customizer.js"></script>
+
 </body>
 </html>
