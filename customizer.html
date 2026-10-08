@@ -8,7 +8,7 @@
 </head>
 <body data-category="upper">
 
-  <!-- Header Navigation -->
+  <!-- Main Navigation -->
   <header class="site-header">
     <div class="logo">
       <a href="/">HUTEMA</a>
@@ -21,76 +21,67 @@
     </nav>
   </header>
 
-  <main class="customizer-container">
-    
-    <!-- Category Selection Header -->
-    <div class="category-header">
-      <h1 class="active-tab"><a href="customizer.html">Upper</a></h1>
-      <h1 class="inactive-tab"><a href="soleplate.html">Soleplate</a></h1>
-    </div>
+  <!-- Page Header Tabs -->
+  <div class="customizer-header" style="padding: 20px 40px 0;">
+    <h1 style="display: inline-block; margin-right: 30px;"><a href="customizer.html" style="color: #000; text-decoration: none;">Upper</a></h1>
+    <h1 style="display: inline-block;"><a href="soleplate.html" style="color: #d4a359; text-decoration: none;">Soleplate</a></h1>
+  </div>
 
-    <div class="customizer-workspace">
-      
-      <!-- Left Column: Controls Panel -->
-      <section class="options-panel">
-        <div class="controls-header">
-          <button class="previous" type="button" aria-label="Previous Option">‹</button>
-          <h2 class="option-name">Leather</h2>
-          <button class="next" type="button" aria-label="Next Option">›</button>
-        </div>
+  <main class="customizer-layout">
+    <!-- Left Controls Section -->
+    <section class="options-panel">
+      <div class="controls-header">
+        <button class="previous" type="button">‹</button>
+        <h2 class="option-name">Leather</h2>
+        <button class="next" type="button">›</button>
+      </div>
 
-        <p class="section-description">Choose a block and material style for your upper.</p>
+      <div class="picture-grid"></div>
 
-        <!-- Dynamically Populated Swatch Grid -->
-        <div class="picture-grid"></div>
+      <div class="color-picker-section">
+        <p>Upper Color: <span id="color-name">Gold</span></p>
+        <div class="color-swatches"></div>
+      </div>
+    </section>
 
-        <div class="color-selection-area">
-          <p>Upper Color: <span id="current-color-name">Gold</span></p>
-          <div class="color-swatches"></div>
-        </div>
-      </section>
+    <!-- Center 3D Model Display (Replaces YOUR CUSTOM HUTEMA BOOT) -->
+    <section class="boot-preview">
+      <div id="webgl-container" style="width: 100%; height: 420px; position: relative;"></div>
+      <p style="text-align: center; font-size: 11px; letter-spacing: 1px; margin-top: 10px; opacity: 0.7;">
+        DRAG TO ROTATE 360° • SCROLL TO ZOOM
+      </p>
+    </section>
 
-      <!-- Center Column: 3D Model Render Engine -->
-      <section class="boot-preview">
-        <div id="webgl-container" style="width: 100%; height: 450px; position: relative;"></div>
-        <p class="preview-instructions">DRAG TO ROTATE 360° • SCROLL TO ZOOM</p>
-      </section>
-
-      <!-- Right Column: Live Summary Display -->
-      <aside class="summary-sidebar">
-        <h3>Custom Boot</h3>
-        
-        <div class="summary-group">
-          <h4>UPPER</h4>
-          <p><strong>Texture:</strong> <span id="summary-texture">Leather</span></p>
-          <p><strong>Block:</strong> <span id="summary-block">High Sock Laceless</span></p>
-          <p><strong>Color:</strong> <span id="summary-color">Gold</span></p>
-        </div>
-
-        <div class="summary-group">
-          <h4>SOLEPLATE</h4>
-          <p><strong>Choice:</strong> <span id="summary-sole-choice">FG</span></p>
-          <p><strong>Block:</strong> <span id="summary-sole-block">Accuracy/Control</span></p>
-          <p><strong>Color:</strong> <span id="summary-sole-color">Silver</span></p>
-        </div>
-
-        <div class="summary-group">
-          <h4>COMBINATION</h4>
-          <p id="summary-combination-text">
-            Leather upper with High Sock Laceless in Gold, paired with a FG soleplate (Accuracy/Control) in Silver.
-          </p>
-        </div>
-      </aside>
-
-    </div>
+    <!-- Right Summary Card -->
+    <aside class="custom-boot-card">
+      <h2>Custom Boot</h2>
+      <hr>
+      <div class="summary-section">
+        <h3>UPPER</h3>
+        <p><strong>Texture:</strong> Leather</p>
+        <p><strong>Block:</strong> High Sock Laceless</p>
+        <p><strong>Color:</strong> Gold</p>
+      </div>
+      <hr>
+      <div class="summary-section">
+        <h3>SOLEPLATE</h3>
+        <p><strong>Choice:</strong> FG</p>
+        <p><strong>Block:</strong> Accuracy/Control</p>
+        <p><strong>Color:</strong> Silver</p>
+      </div>
+      <hr>
+      <div class="summary-section">
+        <h3>COMBINATION</h3>
+        <p>Leather upper with High Sock Laceless in Gold, paired with a FG soleplate (Accuracy/Control) in Silver.</p>
+      </div>
+    </aside>
   </main>
 
-  <!-- Required Three.js CDN Dependencies -->
+  <!-- Required Three.js Engine Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   
-  <!-- Core Logic Script -->
   <script src="customizer.js"></script>
 </body>
 </html>
