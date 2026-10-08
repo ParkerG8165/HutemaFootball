@@ -1,6 +1,6 @@
-/* -----------------------------
-   COLOR MAP & CONFIGURATION
------------------------------ */
+/* =========================================
+   1. COLOR MAP & CONFIGURATION
+   ========================================= */
 
 const COLOR_MAP = [
   { name: "Black", hex: "#000000" },
@@ -38,17 +38,18 @@ const settings = {
   }
 };
 
-const category = document.body.dataset.category;
+const category = document.body.dataset.category || "upper";
 const config = settings[category];
 
-const name = document.querySelector(".option-name");
-const grid = document.querySelector(".picture-grid");
+const nameElement = document.querySelector(".option-name");
+const gridElement = document.querySelector(".picture-grid");
 
 let current = 0;
 
-/* -----------------------------
-   PERSISTENT STORAGE (localStorage)
------------------------------ */
+
+/* =========================================
+   2. PERSISTENT STORAGE (localStorage)
+   ========================================= */
 
 function getStoredSelections() {
   const upperDefault = {
@@ -78,9 +79,135 @@ function saveSelections() {
   localStorage.setItem("hutema_selectedSoleplate", JSON.stringify(selectedSoleplate));
 }
 
-/* -----------------------------
-   CREATE COLOR PICKER SWATCHES
------------------------------ */
+
+/* =========================================
+   3. 3D WEBGL ENGINE SETUP (THREE.JS)
+   ========================================= */
+
+let scene, camera, renderer, controls, bootModel;
+
+function init3D() {
+  const container = document.getElementById("webgl-container");
+  if (!container) return;
+
+  // Scene
+  scene = new THREE.Scene();
+
+  // Camera
+  camera = new THREE.PerspectiveCamera(
+    45,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    1000
+  );
+  camera.position.set(2.5, 1.2, 3);
+
+  // Renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+  container.appendChild(renderer.domElement);
+
+  // Lighting Setup
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+  scene.add(ambientLight);
+
+  const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
+  dirLight1.position.set(5, 10, 7);
+  scene.add(dirLight1);
+
+  const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight2.position.set(-5, -5, -5);
+  scene.add(dirLight2);
+
+  // Orbit Controls (360 Rotation + Zoom)
+  if (typeof THREE.OrbitControls !== "undefined") {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 1.5;
+    controls.maxDistance = 6;
+  }
+
+  // Load Direct CDN 3D Sample Model
+  if (typeof THREE.GLTFLoader !== "undefined") {
+    const loader = new THREE.GLTFLoader();
+    const modelUrl = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb";
+
+    loader.load(
+      modelUrl,
+      (gltf) => {
+        bootModel = gltf.scene;
+
+        // Position and scale sample model for preview window
+        bootModel.position.set(0, -0.4, 0);
+        bootModel.scale.set(1.5, 1.5, 1.5);
+
+        scene.add(bootModel);
+        update3DModel();
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading 3D model:", error);
+      }
+    );
+  }
+
+  window.addEventListener("resize", onWindowResize);
+  animate();
+}
+
+function onWindowResize() {
+  const container = document.getElementById("webgl-container");
+  if (!container || !renderer || !camera) return;
+
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  if (controls) controls.update();
+  if (renderer && scene && camera) renderer.render(scene, camera);
+}
+
+
+/* =========================================
+   4. SYNC 3D MODEL WITH UI SELECTIONS
+   ========================================= */
+
+function update3DModel() {
+  if (!bootModel) return;
+
+  const currentColorHex = category === "upper" ? selectedUpper.colorHex : selectedSoleplate.colorHex;
+
+  bootModel.traverse((child) => {
+    if (child.isMesh && child.material) {
+      // Clone material to ensure smooth visual updates across mesh nodes
+      child.material = child.material.clone();
+      child.material.color.set(currentColorHex);
+
+      /* NOTE FOR PRODUCTION CLEAT MODEL:
+         Once you have your custom cleat file (with named nodes like 'Upper_HighSock' or 'Soleplate_FG'),
+         you will replace this general tinting logic with node visibility swapping:
+
+         const meshName = child.name;
+         if (meshName.startsWith("Upper_")) {
+           child.visible = (meshName === `Upper_${selectedUpper.block.replace(/[\s\/]/g, "")}`);
+           if (child.visible) child.material.color.set(selectedUpper.colorHex);
+         }
+      */
+    }
+  });
+}
+
+
+/* =========================================
+   5. COLOR PICKER SWATCHES
+   ========================================= */
 
 function createColorPicker() {
   let existing = document.querySelector(".color-picker-area");
@@ -140,13 +267,15 @@ function createColorPicker() {
 
       saveSelections();
       updateReport();
+      update3DModel();
     });
   });
 }
 
-/* -----------------------------
-   REPORT
------------------------------ */
+
+/* =========================================
+   6. SUMMARY REPORT PANEL
+   ========================================= */
 
 function createReport() {
   if (document.querySelector(".customization-report")) {
@@ -182,10 +311,6 @@ function createReport() {
   document.querySelector(".customizer-layout").appendChild(report);
 }
 
-/* -----------------------------
-   UPDATE REPORT
------------------------------ */
-
 function updateReport() {
   const upperTexture = document.querySelector("#report-upper-texture");
   const upperBlock = document.querySelector("#report-upper-block");
@@ -196,6 +321,8 @@ function updateReport() {
   const soleColor = document.querySelector("#report-sole-color");
 
   const combination = document.querySelector("#report-combination");
+
+  if (!upperTexture) return;
 
   upperTexture.textContent = selectedUpper.texture;
   upperBlock.textContent = selectedUpper.block;
@@ -209,35 +336,36 @@ function updateReport() {
     `${selectedUpper.texture} upper with ${selectedUpper.block} in ${selectedUpper.colorName}, paired with a ${selectedSoleplate.choice} soleplate (${selectedSoleplate.block}) in ${selectedSoleplate.colorName}.`;
 }
 
-/* -----------------------------
-   RENDER OPTIONS
------------------------------ */
+
+/* =========================================
+   7. RENDER CUSTOMIZER CONTROLS
+   ========================================= */
 
 function render() {
   const option = config.options[current];
   const label = config.labels[current];
 
-  name.textContent = option;
+  if (nameElement) nameElement.textContent = option;
 
-  /* Dynamically generate cards for each defined block */
   const activeBlock = category === "upper" ? selectedUpper.block : selectedSoleplate.block;
 
-  grid.innerHTML = config.blocks
-    .map(
-      (blockName) => `
-      <button
-        class="picture-card${blockName === activeBlock ? " selected" : ""}"
-        type="button"
-        data-block="${blockName}"
-      >
-        <span>${blockName}</span>
-        <small>${option} · ${label}</small>
-      </button>
-    `
-    )
-    .join("");
+  if (gridElement) {
+    gridElement.innerHTML = config.blocks
+      .map(
+        (blockName) => `
+        <button
+          class="picture-card${blockName === activeBlock ? " selected" : ""}"
+          type="button"
+          data-block="${blockName}"
+        >
+          <span>${blockName}</span>
+          <small>${option} · ${label}</small>
+        </button>
+      `
+      )
+      .join("");
+  }
 
-  /* Remember choice */
   if (category === "upper") {
     selectedUpper.texture = option;
   } else if (category === "soleplate") {
@@ -247,51 +375,58 @@ function render() {
   saveSelections();
   createColorPicker();
   updateReport();
+  update3DModel();
 }
 
-/* -----------------------------
-   PREVIOUS / NEXT BUTTONS
------------------------------ */
 
-document.querySelector(".previous").addEventListener("click", () => {
-  current = (current - 1 + config.options.length) % config.options.length;
-  render();
-});
+/* =========================================
+   8. EVENT LISTENERS
+   ========================================= */
 
-document.querySelector(".next").addEventListener("click", () => {
-  current = (current + 1) % config.options.length;
-  render();
-});
+const prevBtn = document.querySelector(".previous");
+if (prevBtn) {
+  prevBtn.addEventListener("click", () => {
+    current = (current - 1 + config.options.length) % config.options.length;
+    render();
+  });
+}
 
-/* -----------------------------
-   SELECT A BLOCK
------------------------------ */
+const nextBtn = document.querySelector(".next");
+if (nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    current = (current + 1) % config.options.length;
+    render();
+  });
+}
 
-grid.addEventListener("click", (event) => {
-  const card = event.target.closest(".picture-card");
-  if (!card) return;
+if (gridElement) {
+  gridElement.addEventListener("click", (event) => {
+    const card = event.target.closest(".picture-card");
+    if (!card) return;
 
-  grid.querySelector(".selected")?.classList.remove("selected");
-  card.classList.add("selected");
+    gridElement.querySelector(".selected")?.classList.remove("selected");
+    card.classList.add("selected");
 
-  const block = card.dataset.block;
+    const block = card.dataset.block;
 
-  if (category === "upper") {
-    selectedUpper.block = block;
-  } else {
-    selectedSoleplate.block = block;
-  }
+    if (category === "upper") {
+      selectedUpper.block = block;
+    } else {
+      selectedSoleplate.block = block;
+    }
 
-  saveSelections();
-  createColorPicker();
-  updateReport();
-});
+    saveSelections();
+    createColorPicker();
+    updateReport();
+    update3DModel();
+  });
+}
 
-/* -----------------------------
-   INITIALIZE
------------------------------ */
 
-// Set starting option slider index to match stored value if returning to page
+/* =========================================
+   9. INITIALIZE PAGE
+   ========================================= */
+
 if (category === "upper") {
   const index = config.options.indexOf(selectedUpper.texture);
   if (index !== -1) current = index;
@@ -302,3 +437,4 @@ if (category === "upper") {
 
 createReport();
 render();
+init3D();
