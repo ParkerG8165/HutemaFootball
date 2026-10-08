@@ -8,7 +8,7 @@
 </head>
 <body data-category="upper">
 
-  <!-- Main Navigation -->
+  <!-- Main Navigation Header -->
   <header class="site-header">
     <div class="logo">
       <a href="/">HUTEMA</a>
@@ -21,20 +21,22 @@
     </nav>
   </header>
 
-  <!-- Page Header Tabs -->
+  <!-- Page Header Tabs matching soleplate styling -->
   <div class="customizer-header" style="padding: 20px 40px 0;">
-    <h1 style="display: inline-block; margin-right: 30px;"><a href="customizer.html" style="color: #000; text-decoration: none;">Upper</a></h1>
-    <h1 style="display: inline-block;"><a href="soleplate.html" style="color: #d4a359; text-decoration: none;">Soleplate</a></h1>
+    <h1 style="display: inline-block; margin-right: 30px;"><a href="customizer.html" style="color: #d4a359; text-decoration: none;">Upper</a></h1>
+    <h1 style="display: inline-block;"><a href="soleplate.html" style="color: #000; text-decoration: none;">Soleplate</a></h1>
   </div>
 
   <main class="customizer-layout">
-    <!-- Left Controls Section -->
+    <!-- Left Options Panel -->
     <section class="options-panel">
       <div class="controls-header">
         <button class="previous" type="button">‹</button>
-        <h2 class="option-name">Leather</h2>
+        <h2 class="option-name">FG</h2>
         <button class="next" type="button">›</button>
       </div>
+
+      <p class="section-description">Choose a block and material style for your upper.</p>
 
       <div class="picture-grid"></div>
 
@@ -44,7 +46,7 @@
       </div>
     </section>
 
-    <!-- Center 3D Model Display (Replaces YOUR CUSTOM HUTEMA BOOT) -->
+    <!-- Center 3D Shoe Model Viewport -->
     <section class="boot-preview">
       <div id="webgl-container" style="width: 100%; height: 420px; position: relative;"></div>
       <p style="text-align: center; font-size: 11px; letter-spacing: 1px; margin-top: 10px; opacity: 0.7;">
@@ -52,7 +54,7 @@
       </p>
     </section>
 
-    <!-- Right Summary Card -->
+    <!-- Right Sidebar Summary Card -->
     <aside class="custom-boot-card">
       <h2>Custom Boot</h2>
       <hr>
@@ -77,11 +79,10 @@
     </aside>
   </main>
 
-  <!-- Required Three.js Engine Libraries -->
+  <!-- Required Libraries & Application Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-  
   <script src="customizer.js"></script>
 </body>
 </html>
