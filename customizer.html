@@ -21,14 +21,14 @@
     </nav>
   </header>
 
-  <!-- Page Header Tabs matching soleplate styling -->
+  <!-- Navigation Tabs -->
   <div class="customizer-header" style="padding: 20px 40px 0;">
     <h1 style="display: inline-block; margin-right: 30px;"><a href="customizer.html" style="color: #d4a359; text-decoration: none;">Upper</a></h1>
     <h1 style="display: inline-block;"><a href="soleplate.html" style="color: #000; text-decoration: none;">Soleplate</a></h1>
   </div>
 
   <main class="customizer-layout">
-    <!-- Left Options Panel (customizer.js handles dynamic controls here) -->
+    <!-- Left Options Panel (customizer.js handles dynamic controls & swatch injection here) -->
     <section class="options-panel">
       <div class="controls-header">
         <button class="previous" type="button">‹</button>
@@ -41,7 +41,7 @@
       <div class="picture-grid"></div>
     </section>
 
-    <!-- Center 3D Shoe Model Viewport -->
+    <!-- Center 3D Model Display Viewport -->
     <section class="boot-preview">
       <div id="webgl-container" style="width: 100%; height: 420px; position: relative;"></div>
       <p style="text-align: center; font-size: 11px; letter-spacing: 1px; margin-top: 10px; opacity: 0.7;">
@@ -74,7 +74,7 @@
     </aside>
   </main>
 
-  <!-- Required Libraries & Application Script -->
+  <!-- Three.js Engine & Application Logic Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
