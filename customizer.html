@@ -6,7 +6,7 @@
   <title>Upper Customizer | Hutema</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body data-category="upper">
+<body data-category="upper" style="background-color: #fcf8f2; margin: 0; padding: 0;">
 
   <!-- Main Navigation Header -->
   <header class="site-header">
@@ -28,22 +28,17 @@
   </div>
 
   <main class="customizer-layout">
-    <!-- Left Options Panel -->
+    <!-- Left Options Panel (customizer.js handles dynamic controls here) -->
     <section class="options-panel">
       <div class="controls-header">
         <button class="previous" type="button">‹</button>
-        <h2 class="option-name">FG</h2>
+        <h2 class="option-name">Leather</h2>
         <button class="next" type="button">›</button>
       </div>
 
       <p class="section-description">Choose a block and material style for your upper.</p>
 
       <div class="picture-grid"></div>
-
-      <div class="color-picker-section">
-        <p>Upper Color: <span id="color-name">Gold</span></p>
-        <div class="color-swatches"></div>
-      </div>
     </section>
 
     <!-- Center 3D Shoe Model Viewport -->
@@ -60,21 +55,21 @@
       <hr>
       <div class="summary-section">
         <h3>UPPER</h3>
-        <p><strong>Texture:</strong> Leather</p>
-        <p><strong>Block:</strong> High Sock Laceless</p>
-        <p><strong>Color:</strong> Gold</p>
+        <p><strong>Texture:</strong> <span id="summary-upper-texture">Leather</span></p>
+        <p><strong>Block:</strong> <span id="summary-upper-block">High Sock Laceless</span></p>
+        <p><strong>Color:</strong> <span id="summary-upper-color">Gold</span></p>
       </div>
       <hr>
       <div class="summary-section">
         <h3>SOLEPLATE</h3>
-        <p><strong>Choice:</strong> FG</p>
-        <p><strong>Block:</strong> Accuracy/Control</p>
-        <p><strong>Color:</strong> Silver</p>
+        <p><strong>Choice:</strong> <span id="summary-sole-choice">FG</span></p>
+        <p><strong>Block:</strong> <span id="summary-sole-block">Accuracy/Control</span></p>
+        <p><strong>Color:</strong> <span id="summary-sole-color">Silver</span></p>
       </div>
       <hr>
       <div class="summary-section">
         <h3>COMBINATION</h3>
-        <p>Leather upper with High Sock Laceless in Gold, paired with a FG soleplate (Accuracy/Control) in Silver.</p>
+        <p id="summary-combination">Leather upper with High Sock Laceless in Gold, paired with a FG soleplate (Accuracy/Control) in Silver.</p>
       </div>
     </aside>
   </main>
