@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hutema Customizer - Shoe Customization Engine</title>
+  <title>Upper Customizer | Hutema</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
-<!-- data-category defines initial active customizer context -->
 <body data-category="upper">
 
   <!-- Header Navigation -->
@@ -15,52 +13,84 @@
     <div class="logo">
       <a href="/">HUTEMA</a>
     </div>
-    <nav class="category-tabs">
-      <a href="customizer.html" class="tab-link active">Upper</a>
-      <a href="soleplate.html" class="tab-link">Soleplate</a>
+    <nav class="main-nav">
+      <a href="#">Main Line</a>
+      <a href="customizer.html" class="active">Customize</a>
+      <a href="#">Repurpose</a>
+      <a href="#">About Us</a>
     </nav>
   </header>
 
-  <!-- Main Customizer Layout Workspace -->
-  <main class="customizer-layout">
+  <main class="customizer-container">
+    
+    <!-- Category Selection Header -->
+    <div class="category-header">
+      <h1 class="active-tab"><a href="customizer.html">Upper</a></h1>
+      <h1 class="inactive-tab"><a href="soleplate.html">Soleplate</a></h1>
+    </div>
 
-    <!-- 3D Model WebGL Canvas Section -->
-    <section class="boot-preview">
-      <div 
-        id="webgl-container" 
-        style="width: 100%; height: 480px; position: relative; background: #f8fafc; border-radius: 12px; overflow: hidden;"
-      ></div>
-      <p class="preview-instructions">Drag to rotate 360° • Scroll to zoom</p>
-    </section>
+    <div class="customizer-workspace">
+      
+      <!-- Left Column: Controls Panel -->
+      <section class="options-panel">
+        <div class="controls-header">
+          <button class="previous" type="button" aria-label="Previous Option">‹</button>
+          <h2 class="option-name">Leather</h2>
+          <button class="next" type="button" aria-label="Next Option">›</button>
+        </div>
 
-    <!-- Interactive Customization Panel -->
-    <section class="options-panel">
-      <!-- Section Switcher Header -->
-      <div class="controls-header">
-        <button class="previous" type="button" aria-label="Previous Option">‹</button>
-        <h2 class="option-name">Leather</h2>
-        <button class="next" type="button" aria-label="Next Option">›</button>
-      </div>
+        <p class="section-description">Choose a block and material style for your upper.</p>
 
-      <!-- Dynamically Populated Material / Color Grid -->
-      <div class="picture-grid"></div>
+        <!-- Dynamically Populated Swatch Grid -->
+        <div class="picture-grid"></div>
 
-      <!-- Customization Summary Output -->
-      <div class="customizer-summary" style="margin-top: 2rem;">
-        <h3>Configuration Summary</h3>
-        <div id="summary-details"></div>
-      </div>
-    </section>
+        <div class="color-selection-area">
+          <p>Upper Color: <span id="current-color-name">Gold</span></p>
+          <div class="color-swatches"></div>
+        </div>
+      </section>
 
+      <!-- Center Column: 3D Model Render Engine -->
+      <section class="boot-preview">
+        <div id="webgl-container" style="width: 100%; height: 450px; position: relative;"></div>
+        <p class="preview-instructions">DRAG TO ROTATE 360° • SCROLL TO ZOOM</p>
+      </section>
+
+      <!-- Right Column: Live Summary Display -->
+      <aside class="summary-sidebar">
+        <h3>Custom Boot</h3>
+        
+        <div class="summary-group">
+          <h4>UPPER</h4>
+          <p><strong>Texture:</strong> <span id="summary-texture">Leather</span></p>
+          <p><strong>Block:</strong> <span id="summary-block">High Sock Laceless</span></p>
+          <p><strong>Color:</strong> <span id="summary-color">Gold</span></p>
+        </div>
+
+        <div class="summary-group">
+          <h4>SOLEPLATE</h4>
+          <p><strong>Choice:</strong> <span id="summary-sole-choice">FG</span></p>
+          <p><strong>Block:</strong> <span id="summary-sole-block">Accuracy/Control</span></p>
+          <p><strong>Color:</strong> <span id="summary-sole-color">Silver</span></p>
+        </div>
+
+        <div class="summary-group">
+          <h4>COMBINATION</h4>
+          <p id="summary-combination-text">
+            Leather upper with High Sock Laceless in Gold, paired with a FG soleplate (Accuracy/Control) in Silver.
+          </p>
+        </div>
+      </aside>
+
+    </div>
   </main>
 
-  <!-- External 3D Libraries (Must precede customizer.js) -->
+  <!-- Required Three.js CDN Dependencies -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
-  <!-- Core Customizer Application Logic -->
+  
+  <!-- Core Logic Script -->
   <script src="customizer.js"></script>
-
 </body>
 </html>
