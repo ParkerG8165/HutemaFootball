@@ -278,6 +278,16 @@ function createColorPicker() {
    ========================================= */
 
 function createReport() {
+  // The Upper page already contains its own receipt.
+  if (category === "upper") {
+    return;
+  }
+
+  if (document.querySelector(".customization-report")) {
+    return;
+  }
+
+  // Keep the rest of the existing function unchanged.
   if (document.querySelector(".customization-report")) {
     return;
   }
@@ -312,29 +322,58 @@ function createReport() {
 }
 
 function updateReport() {
-  const upperTexture = document.querySelector("#report-upper-texture");
-  const upperBlock = document.querySelector("#report-upper-block");
-  const upperColor = document.querySelector("#report-upper-color");
+  const setText = (selectors, value) => {
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
 
-  const soleChoice = document.querySelector("#report-sole-choice");
-  const soleBlock = document.querySelector("#report-sole-block");
-  const soleColor = document.querySelector("#report-sole-color");
+      if (element) {
+        element.textContent = value;
+      }
+    }
+  };
 
-  const combination = document.querySelector("#report-combination");
+  setText(
+    ["#summary-upper-texture", "#report-upper-texture"],
+    selectedUpper.texture
+  );
 
-  if (!upperTexture) return;
+  setText(
+    ["#summary-upper-block", "#report-upper-block"],
+    selectedUpper.block
+  );
 
-  upperTexture.textContent = selectedUpper.texture;
-  upperBlock.textContent = selectedUpper.block;
-  upperColor.textContent = selectedUpper.colorName;
+  setText(
+    ["#summary-upper-color", "#report-upper-color"],
+    selectedUpper.colorName
+  );
 
-  soleChoice.textContent = selectedSoleplate.choice;
-  soleBlock.textContent = selectedSoleplate.block;
-  soleColor.textContent = selectedSoleplate.colorName;
+  setText(
+    ["#summary-sole-choice", "#report-sole-choice"],
+    selectedSoleplate.choice
+  );
 
-  combination.textContent = 
-    `${selectedUpper.texture} upper with ${selectedUpper.block} in ${selectedUpper.colorName}, paired with a ${selectedSoleplate.choice} soleplate (${selectedSoleplate.block}) in ${selectedSoleplate.colorName}.`;
+  setText(
+    ["#summary-sole-block", "#report-sole-block"],
+    selectedSoleplate.block
+  );
+
+  setText(
+    ["#summary-sole-color", "#report-sole-color"],
+    selectedSoleplate.colorName
+  );
+
+  const combination =
+    `${selectedUpper.texture} upper with ${selectedUpper.block} ` +
+    `in ${selectedUpper.colorName}, paired with a ` +
+    `${selectedSoleplate.choice} soleplate ` +
+    `(${selectedSoleplate.block}) in ${selectedSoleplate.colorName}.`;
+
+  setText(
+    ["#summary-combination", "#report-combination"],
+    combination
+  );
 }
+
 
 
 /* =========================================

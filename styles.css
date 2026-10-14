@@ -1,3 +1,4 @@
+
 :root {
   --cream: #fff1dc;
   --black: #000000;
@@ -22,41 +23,58 @@ a {
 }
 
 /* Header and navigation */
-
 .site-header {
   height: 81px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px 3.55%;
-  background: white;
+  background: #000000 !important;
 }
 
 .logo {
   display: grid;
   justify-items: center;
+  flex-shrink: 0;
+}
+
+.logo a {
+  display: flex;
+  align-items: center;
 }
 
 .brand-image {
   width: 68px;
   height: 66px;
   object-fit: contain;
+  filter: brightness(0) invert(1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .main-nav {
   display: flex;
+  align-items: center;
   gap: clamp(19px, 2vw, 34px);
-  font-size: clamp(1rem, 1.75vw, 1.5rem);
-  font-weight: 700;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(0.95rem, 1.55vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.main-nav a {
+  color: #ffffff !important;
+  font-weight: 400;
+  transition: color 0.2s ease;
 }
 
 .main-nav a:hover,
 .main-nav a.current {
-  color: #147ea6;
+  color: #cccccc !important;
 }
 
 /* Homepage */
-
 .home-page {
   min-height: 100vh;
   background: var(--cream);
@@ -119,7 +137,6 @@ a {
 }
 
 /* Main Line, Repurpose, and About pages */
-
 .simple-page {
   min-height: 100vh;
   background: var(--cream);
@@ -147,7 +164,6 @@ a {
 }
 
 /* Customizer pages */
-
 .customizer-page {
   min-height: 100vh;
   background: var(--cream);
@@ -276,10 +292,7 @@ a {
   letter-spacing: 0.09em;
 }
 
-/* =========================================
-   CUSTOMIZATION COLOR PICKER (SWATCHES)
-   ========================================= */
-
+/* Customization color picker */
 .color-picker-area {
   margin-top: 24px;
   padding-top: 20px;
@@ -311,7 +324,9 @@ a {
   border: 2px solid transparent;
   outline: 1px solid #ccc;
   cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease,
+              border-color 0.15s ease,
+              box-shadow 0.15s ease;
 }
 
 .color-swatch:hover {
@@ -319,20 +334,17 @@ a {
 }
 
 .color-swatch.active {
-  border-color: #ffffff;
+  border-color: #fff;
   outline: 2px solid var(--black);
   transform: scale(1.15);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-/* =========================================
-   CUSTOMIZATION REPORT
-   ========================================= */
-
+/* Customization report */
 .customization-report {
   width: 300px;
   padding: 28px;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   align-self: start;
@@ -366,10 +378,7 @@ a {
   margin: 20px 0;
 }
 
-/* =========================================
-   RESPONSIVE LAYOUTS
-   ========================================= */
-
+/* Responsive layouts */
 @media (max-width: 1000px) {
   .customizer-layout {
     grid-template-columns: 1fr 1fr;
@@ -385,11 +394,13 @@ a {
   .site-header {
     height: 72px;
     padding: 8px 5%;
+    background: #000000 !important;
   }
 
   .brand-image {
     width: 54px;
     height: 52px;
+    filter: brightness(0) invert(1) !important;
   }
 
   .main-nav {
@@ -441,5 +452,93 @@ a {
 
   .boot-image {
     width: min(85vw, 430px);
+  }
+}
+
+/* Global logo visibility: white on every page */
+.site-header .brand-image,
+.logo .brand-image,
+.brand-image {
+  filter: brightness(0) invert(1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Consistent header and navigation colors across all pages */
+.site-header {
+  background-color: #000000 !important;
+}
+
+.site-header .main-nav a {
+  color: #ffffff !important;
+}
+
+.site-header .main-nav a:hover,
+.site-header .main-nav a.current {
+  color: #cccccc !important;
+}
+
+/* Upper customizer: match Soleplate styling */
+.customizer-page {
+  background: var(--cream) !important;
+}
+
+.site-header .logo {
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.customizer-main .customizer-layout {
+  align-items: start;
+}
+
+.custom-boot-card {
+  width: 300px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  align-self: start;
+}
+
+.custom-boot-card h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.custom-boot-card h3 {
+  margin-top: 20px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+
+.custom-boot-card p {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.custom-boot-card hr {
+  border: 0;
+  border-top: 1px solid #dddddd;
+  margin: 20px 0;
+}
+
+@media (max-width: 1000px) {
+  .custom-boot-card {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .custom-boot-card {
+    grid-column: auto;
+    width: 100%;
   }
 }

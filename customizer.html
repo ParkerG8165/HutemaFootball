@@ -1,83 +1,114 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upper Customizer | Hutema</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body data-category="upper" style="background-color: #fcf8f2; margin: 0; padding: 0;">
 
-  <!-- Main Navigation Header -->
+<body class="customizer-page" data-category="upper">
+
   <header class="site-header">
-    <div class="logo">
-      <a href="/">HUTEMA</a>
-    </div>
+    <a class="logo" href="/" aria-label="Hutema home">
+      <span class="logo-mark"></span>
+      <span>HUTEMA</span>
+    </a>
+
     <nav class="main-nav">
-      <a href="#">Main Line</a>
-      <a href="customizer.html" class="active">Customize</a>
-      <a href="#">Repurpose</a>
-      <a href="#">About Us</a>
+      <a href="main-line.html">Main Line</a>
+      <a class="current" href="customizer.html">Customize</a>
+      <a href="repurpose.html">Repurpose</a>
+      <a href="about.html">About Us</a>
     </nav>
   </header>
 
-  <!-- Navigation Tabs -->
-  <div class="customizer-header" style="padding: 20px 40px 0;">
-    <h1 style="display: inline-block; margin-right: 30px;"><a href="customizer.html" style="color: #d4a359; text-decoration: none;">Upper</a></h1>
-    <h1 style="display: inline-block;"><a href="soleplate.html" style="color: #000; text-decoration: none;">Soleplate</a></h1>
-  </div>
+  <main class="customizer-main">
 
-  <main class="customizer-layout">
-    <!-- Left Options Panel (customizer.js handles dynamic controls & swatch injection here) -->
-    <section class="options-panel">
-      <div class="controls-header">
-        <button class="previous" type="button">‹</button>
-        <h2 class="option-name">Leather</h2>
-        <button class="next" type="button">›</button>
-      </div>
+    <nav class="config-tabs">
+      <a class="active" href="customizer.html">Upper</a>
+      <a href="soleplate.html">Soleplate</a>
+    </nav>
 
-      <p class="section-description">Choose a block and material style for your upper.</p>
+    <section class="customizer-layout">
 
-      <div class="picture-grid"></div>
+      <section class="options-panel">
+        <div class="option-switcher">
+          <button class="arrow-button previous" type="button"
+            aria-label="Previous upper material">◀</button>
+
+          <strong class="option-name">Leather</strong>
+
+          <button class="arrow-button next" type="button"
+            aria-label="Next upper material">▶</button>
+        </div>
+
+        <p class="option-description">
+          Choose a block and material style for your upper.
+        </p>
+
+        <div class="picture-grid"></div>
+      </section>
+
+      <section class="boot-preview">
+        <div id="webgl-container"
+          style="width: 100%; height: 420px; position: relative;">
+        </div>
+
+        <p>Your custom Hutema boot</p>
+      </section>
+
+      <aside class="custom-boot-card">
+        <h2>Custom Boot</h2>
+        <hr>
+
+        <div class="summary-section">
+          <h3>UPPER</h3>
+          <p><strong>Texture:</strong>
+            <span id="summary-upper-texture">Leather</span>
+          </p>
+          <p><strong>Block:</strong>
+            <span id="summary-upper-block">High Sock Laces</span>
+          </p>
+          <p><strong>Color:</strong>
+            <span id="summary-upper-color">Black</span>
+          </p>
+        </div>
+
+        <hr>
+
+        <div class="summary-section">
+          <h3>SOLEPLATE</h3>
+          <p><strong>Choice:</strong>
+            <span id="summary-sole-choice">FG</span>
+          </p>
+          <p><strong>Block:</strong>
+            <span id="summary-sole-block">Accuracy/Control</span>
+          </p>
+          <p><strong>Color:</strong>
+            <span id="summary-sole-color">White</span>
+          </p>
+        </div>
+
+        <hr>
+
+        <div class="summary-section">
+          <h3>COMBINATION</h3>
+          <p id="summary-combination">
+            Leather upper with High Sock Laces in Black, paired with
+            a FG soleplate (Accuracy/Control) in White.
+          </p>
+        </div>
+      </aside>
+
     </section>
-
-    <!-- Center 3D Model Display Viewport -->
-    <section class="boot-preview">
-      <div id="webgl-container" style="width: 100%; height: 420px; position: relative;"></div>
-      <p style="text-align: center; font-size: 11px; letter-spacing: 1px; margin-top: 10px; opacity: 0.7;">
-        DRAG TO ROTATE 360° • SCROLL TO ZOOM
-      </p>
-    </section>
-
-    <!-- Right Sidebar Summary Card -->
-    <aside class="custom-boot-card">
-      <h2>Custom Boot</h2>
-      <hr>
-      <div class="summary-section">
-        <h3>UPPER</h3>
-        <p><strong>Texture:</strong> <span id="summary-upper-texture">Leather</span></p>
-        <p><strong>Block:</strong> <span id="summary-upper-block">High Sock Laceless</span></p>
-        <p><strong>Color:</strong> <span id="summary-upper-color">Gold</span></p>
-      </div>
-      <hr>
-      <div class="summary-section">
-        <h3>SOLEPLATE</h3>
-        <p><strong>Choice:</strong> <span id="summary-sole-choice">FG</span></p>
-        <p><strong>Block:</strong> <span id="summary-sole-block">Accuracy/Control</span></p>
-        <p><strong>Color:</strong> <span id="summary-sole-color">Silver</span></p>
-      </div>
-      <hr>
-      <div class="summary-section">
-        <h3>COMBINATION</h3>
-        <p id="summary-combination">Leather upper with High Sock Laceless in Gold, paired with a FG soleplate (Accuracy/Control) in Silver.</p>
-      </div>
-    </aside>
   </main>
 
-  <!-- Three.js Engine & Application Logic Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="customizer.js"></script>
+
 </body>
 </html>
