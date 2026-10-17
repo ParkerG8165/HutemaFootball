@@ -6,25 +6,76 @@
   <title>HUTEMA Radio</title>
   <link rel="stylesheet" href="radio.css">
 </head>
-<body class="radio-shell">
-  <main class="radio-main">
-    <iframe id="site-frame" title="Hutema website" src="index.html"></iframe>
+<body>
+  <main class="site-shell">
+    <iframe id="site-frame" title="HUTEMA website" src="index.html"></iframe>
   </main>
-  <section class="radio-player" aria-label="HUTEMA Radio player">
-    <div class="radio-player-brand">
-      <span class="radio-equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <div><strong>HUTEMA RADIO</strong><span class="radio-status" id="radio-status">YOUR FOOTBALL SOUNDTRACK</span></div>
+
+  <section class="radio-bar" id="radio-bar" aria-label="HUTEMA Radio player">
+    <div class="radio-brand">
+      <div class="radio-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="brand-copy">
+        <strong>HUTEMA <span>RADIO</span></strong>
+        <small>FIFA + WORLD CUP</small>
+      </div>
     </div>
-    <div class="radio-track">
-      <span class="radio-cover" aria-hidden="true">H</span>
-      <div class="radio-track-text"><strong id="track-title">The playlist is coming soon</strong><span id="track-artist">FIFA soundtracks • World Cup anthems</span></div>
+
+    <div class="track-info" aria-live="polite">
+      <div class="track-title" id="track-title">HUTEMA Radio</div>
+      <div class="track-artist" id="track-artist">Choose a song to get started</div>
     </div>
-    <div class="radio-controls">
-      <button type="button" id="radio-play" aria-label="Play" title="Play">▶</button>
-      <button type="button" id="radio-next" aria-label="Next track" title="Next track">⏭</button>
+
+    <div class="transport-controls" aria-label="Playback controls">
+      <button class="control-button secondary" id="previous-button" type="button" aria-label="Previous song" title="Previous song">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6l-9 6 9 6V6Z"/></svg>
+        <span>Previous</span>
+      </button>
+      <button class="control-button play-button" id="play-button" type="button" aria-label="Play" title="Play">
+        <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>
+        <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg>
+        <span id="play-label">Play</span>
+      </button>
+      <button class="control-button secondary" id="next-button" type="button" aria-label="Next song" title="Next song">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 6l9 6-9 6V6Z"/></svg>
+        <span>Next</span>
+      </button>
     </div>
-    <div class="radio-volume"><span aria-hidden="true">♫</span><span>PLAYLIST COMING SOON</span></div>
+
+    <div class="track-progress">
+      <div class="time-row"><span id="current-time">0:00</span><span id="duration">0:00</span></div>
+      <input id="progress" type="range" min="0" max="1000" value="0" aria-label="Song progress">
+    </div>
+
+    <div class="utility-controls">
+      <button class="utility-button" id="playlist-toggle" type="button" aria-expanded="false" aria-controls="playlist-panel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h11M4 18h8M18 14v7m-3.5-3.5h7"/></svg>
+        <span>Playlist</span>
+      </button>
+      <label class="volume-control" for="volume">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Zm12-2a6 6 0 0 1 0 8m2-11a10 10 0 0 1 0 14"/></svg>
+        <span class="sr-only">Volume</span>
+        <input id="volume" type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Volume">
+      </label>
+    </div>
+
+    <div class="playlist-panel" id="playlist-panel" hidden>
+      <div class="playlist-heading">
+        <strong>Choose your soundtrack</strong>
+        <button type="button" id="playlist-close" aria-label="Close playlist">×</button>
+      </div>
+      <div class="playlist-tabs" role="group" aria-label="Playlist category">
+        <button type="button" class="playlist-tab active" data-category="all">All songs</button>
+        <button type="button" class="playlist-tab" data-category="fifa">FIFA</button>
+        <button type="button" class="playlist-tab" data-category="worldcup">World Cup</button>
+      </div>
+      <div class="playlist-list" id="playlist-list"></div>
+      <p class="playlist-note" id="playlist-note">Add your licensed MP3 files to assets/radio and update the playlist in radio.js.</p>
+    </div>
+
+    <audio id="radio-audio" preload="metadata"></audio>
   </section>
+
+  <div id="radio-status" class="sr-only" role="status" aria-live="polite"></div>
   <script src="radio.js"></script>
 </body>
 </html>
