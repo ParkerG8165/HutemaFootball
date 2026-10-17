@@ -8,19 +8,36 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="home-page">
-  <header class="site-header">
-    <a class="logo" href="/" aria-label="Hutema home">
-      <span class="logo-mark"></span>
-      <span>HUTEMA</span>
+ html
+<header class="site-header">
+  <a class="logo" href="/" aria-label="Hutema home">
+    <span class="logo-mark"></span>
+    <span>HUTEMA</span>
+  </a>
+
+  <nav class="main-nav" aria-label="Main navigation">
+    <a href="main-line.html">Main Line</a>
+    <a href="customizer.html">Customize</a>
+    <a href="repurpose.html">Repurpose</a>
+    <a href="about.html">About Us</a>
+
+    <a class="nav-account" href="account.html" aria-label="Log in or create an account" title="Account">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="8" r="3.5"></circle>
+        <path d="M5 20c0-4 2.8-6.5 7-6.5s7 2.5 7 6.5"></path>
+      </svg>
     </a>
 
-    <nav class="main-nav">
-      <a href="main-line.html">Main Line</a>
-      <a href="customizer.html">Customize</a>
-      <a href="repurpose.html">Repurpose</a>
-      <a href="about.html">About Us</a>
-    </nav>
-  </header>
+    <a class="nav-cart" href="cart.html" aria-label="Shopping cart" title="Shopping cart">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L21 8H6"></path>
+        <circle cx="10" cy="20" r="1"></circle>
+        <circle cx="18" cy="20" r="1"></circle>
+      </svg>
+      <span class="cart-count" hidden>0</span>
+    </a>
+  </nav>
+</header>
 
   <video class="background-video" autoplay muted loop playsinline aria-hidden="true">
     <source src="assets/website_boomerang.mp4" type="video/mp4">
