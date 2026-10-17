@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HUTEMA Radio</title>
+  <link rel="stylesheet" href="radio.css">
+</head>
+<body class="radio-shell">
+  <header class="radio-header">
+    <a class="radio-brand" href="radio.html?page=index.html" aria-label="Hutema home">HUTEMA</a>
+    <div class="radio-label"><span class="radio-dot"></span> HUTEMA RADIO</div>
+    <a class="radio-back" href="radio.html?page=index.html">HOME</a>
+  </header>
+
+  <main class="radio-main">
+    <iframe id="site-frame" title="Hutema website" src="index.html"></iframe>
+  </main>
+
+  <section class="radio-player" aria-label="HUTEMA Radio player">
+    <div class="radio-player-brand">
+      <span class="radio-equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div>
+        <strong>HUTEMA RADIO</strong>
+        <span class="radio-status" id="radio-status">YOUR FOOTBALL SOUNDTRACK</span>
+      </div>
+    </div>
+    <div class="radio-track">
+      <span class="radio-cover" aria-hidden="true">H</span>
+      <div class="radio-track-text">
+        <strong id="track-title">The playlist is coming soon</strong>
+        <span id="track-artist">FIFA soundtracks • World Cup anthems</span>
+      </div>
+    </div>
+    <div class="radio-controls">
+      <button type="button" id="radio-play" aria-label="Play" title="Play">▶</button>
+      <button type="button" id="radio-next" aria-label="Next track" title="Next track">⏭</button>
+    </div>
+    <div class="radio-volume">
+      <span aria-hidden="true">♫</span>
+      <span>PLAYLIST COMING SOON</span>
+    </div>
+  </section>
+
+  <script src="radio.js"></script>
+</body>
+</html>

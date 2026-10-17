@@ -1,0 +1,111 @@
+:root {
+  --radio-black: #050505;
+  --radio-cream: #fff1dc;
+  --radio-teal: #004e64;
+  --radio-blue: #59c8ef;
+  --radio-gold: #efb733;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; }
+body.radio-shell {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--radio-cream);
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.radio-header {
+  flex: 0 0 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 3.5%;
+  background: #000;
+  border-bottom: 1px solid #252525;
+}
+.radio-brand {
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: -.07em;
+  font-size: 1.55rem;
+  text-decoration: none;
+}
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #e8e8e8;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.radio-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--radio-gold);
+  box-shadow: 0 0 10px #efb73388;
+}
+.radio-back {
+  color: #fff;
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-decoration: none;
+}
+.radio-main { flex: 1 1 auto; min-height: 0; background: var(--radio-cream); }
+#site-frame { display: block; width: 100%; height: 100%; border: 0; background: var(--radio-cream); }
+.radio-player {
+  flex: 0 0 auto;
+  min-height: 100px;
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) minmax(230px, 1.35fr) auto minmax(145px, .8fr);
+  align-items: center;
+  gap: 22px;
+  padding: 15px 3.5%;
+  background: #050505;
+  border-top: 3px solid var(--radio-teal);
+}
+.radio-player-brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.radio-player-brand > div, .radio-track-text { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.radio-player-brand strong { font-size: .88rem; letter-spacing: .12em; }
+.radio-status { color: #aaa; font-size: .62rem; letter-spacing: .08em; }
+.radio-equalizer { height: 28px; display: flex; align-items: center; gap: 3px; }
+.radio-equalizer i { display: block; width: 4px; border-radius: 3px; background: var(--radio-blue); height: 12px; }
+.radio-equalizer i:nth-child(2) { height: 25px; }
+.radio-equalizer i:nth-child(3) { height: 17px; }
+.radio-equalizer i:nth-child(4) { height: 21px; }
+.radio-track { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.radio-cover {
+  width: 48px; height: 48px; flex: 0 0 48px;
+  display: grid; place-items: center; border-radius: 4px;
+  background: linear-gradient(135deg, var(--radio-teal), #001d26);
+  color: var(--radio-cream); font-weight: 900; font-size: 1.6rem;
+}
+.radio-track-text strong { font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.radio-track-text span { color: #aaa; font-size: .72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.radio-controls { display: flex; align-items: center; gap: 12px; }
+.radio-controls button {
+  width: 42px; height: 42px; border: 0; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  color: #000; background: var(--radio-cream); font-size: 1rem;
+  transition: transform .15s ease, background .15s ease;
+}
+.radio-controls button:hover { transform: scale(1.06); background: var(--radio-blue); }
+.radio-controls button:focus-visible, .radio-header a:focus-visible { outline: 2px solid var(--radio-gold); outline-offset: 3px; }
+.radio-volume { display: flex; justify-content: flex-end; align-items: center; gap: 9px; color: #aaa; font-size: .62rem; letter-spacing: .08em; }
+.radio-volume span:first-child { color: var(--radio-blue); font-size: 1.1rem; }
+@media (max-width: 820px) {
+  .radio-player { grid-template-columns: 1fr auto; gap: 12px 18px; padding: 12px 4%; }
+  .radio-player-brand { display: none; }
+  .radio-track { grid-column: 1; grid-row: 1; }
+  .radio-controls { grid-column: 2; grid-row: 1; }
+  .radio-volume { grid-column: 1 / -1; justify-content: flex-start; }
+}
+@media (max-width: 480px) {
+  .radio-header { flex-basis: 54px; padding: 0 4%; }
+  .radio-brand { font-size: 1.25rem; }
+  .radio-label { font-size: .62rem; }
+  .radio-player { min-height: 94px; }
+  .radio-cover { width: 40px; height: 40px; flex-basis: 40px; }
+  .radio-controls button { width: 38px; height: 38px; }
+}

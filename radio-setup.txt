@@ -1,0 +1,20 @@
+HUTEMA RADIO — SETUP
+
+Files in this folder:
+- radio.html
+- radio.css
+- radio.js
+- radio-bridge.js
+
+1. Copy all four files into the same root folder as index.html and styles.css.
+2. Add this script immediately before </body> on EVERY page you want routed through the persistent player:
+   <script src="radio-bridge.js"></script>
+   Include it in index.html, main-line.html, customizer.html, soleplate.html, repurpose.html, and about.html.
+   Also add it to upper.html only if you still use that page.
+3. Commit/push the changes and open the site normally. The bridge sends direct page visits into radio.html; links inside the embedded page are handled by radio.js, keeping the player alive.
+4. The controls are UI-only for now. They do not play audio until a playlist/audio source is connected later.
+
+Important:
+- Keep your existing styles.css and customizer.js unchanged.
+- Do not replace your existing HTML with these starter files.
+- This works best when all listed pages and these radio files are hosted in the same directory/origin.
