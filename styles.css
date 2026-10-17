@@ -565,3 +565,52 @@ a {
   color: #cccccc !important;
 }
 
+/* Homepage background video */
+.home-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.home-page .background-video {
+  position: absolute;
+  top: 81px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 81px);
+  object-fit: cover;
+  object-position: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Keep the homepage content above the video */
+.home-page .home-hero {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* Homepage heading: both lines white */
+.home-page .home-hero h1 {
+  color: #ffffff;
+}
+
+.home-page .home-hero h1 span {
+  color: #ffffff;
+}
+
+/* Make Football Boots smaller than HUTEMA */
+.home-page .home-hero h1 .hero-subtitle {
+  margin-top: 8px;
+  font-size: 0.58em;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 700px) {
+  .home-page .background-video {
+    top: 72px;
+    height: calc(100vh - 72px);
+  }
+}
+
