@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="home-page">
- html
+
 <header class="site-header">
   <a class="logo" href="/" aria-label="Hutema home">
     <span class="logo-mark"></span>
@@ -21,23 +21,70 @@
     <a href="repurpose.html">Repurpose</a>
     <a href="about.html">About Us</a>
 
-    <a class="nav-account" href="account.html" aria-label="Log in or create an account" title="Account">
+    <button
+      class="nav-account"
+      id="account-toggle"
+      type="button"
+      aria-label="Open account menu"
+      aria-controls="account-dropdown"
+      aria-expanded="false"
+      title="Account"
+    >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="8" r="3.5"></circle>
         <path d="M5 20c0-4 2.8-6.5 7-6.5s7 2.5 7 6.5"></path>
       </svg>
-    </a>
+    </button>
 
-    <a class="nav-cart" href="cart.html" aria-label="Shopping cart" title="Shopping cart">
+    <a class="nav-cart" href="cart.html"
+       aria-label="Shopping cart" title="Shopping cart">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L21 8H6"></path>
         <circle cx="10" cy="20" r="1"></circle>
         <circle cx="18" cy="20" r="1"></circle>
       </svg>
-      <span class="cart-count" hidden>0</span>
     </a>
   </nav>
+
+  <aside
+    class="account-dropdown"
+    id="account-dropdown"
+    aria-labelledby="account-heading"
+    hidden
+  >
+    <section class="account-welcome">
+      <h2 id="account-heading">WELCOME TO HUTEMA</h2>
+      <p>
+        Sign in to access your account and keep your favorite boot designs
+        together.
+      </p>
+
+      <a class="account-action account-action-primary"
+         href="account.html?mode=login">
+        LOG IN
+      </a>
+    </section>
+
+    <hr class="account-divider">
+
+    <section class="account-register">
+      <h3>NEW TO HUTEMA?</h3>
+      <p>Create an account to save your custom boot designs.</p>
+
+      <a class="account-action account-action-secondary"
+         href="account.html?mode=signup">
+        CREATE ACCOUNT
+      </a>
+    </section>
+  </aside>
 </header>
+
+<aside
+  class="account-overlay"
+  id="account-overlay"
+  aria-label="Close account menu"
+  hidden
+></aside>
 
   <video class="background-video" autoplay muted loop playsinline aria-hidden="true">
     <source src="assets/website_boomerang.mp4" type="video/mp4">
@@ -56,6 +103,52 @@
       <a class="start-button" href="customizer.html">Start Customizing</a>
     </div>
   </main>
+
+<script>
+  (() => {
+    const toggle = document.getElementById("account-toggle");
+    const dropdown = document.getElementById("account-dropdown");
+    const overlay = document.getElementById("account-overlay");
+
+    if (!toggle || !dropdown || !overlay) return;
+
+    function openAccountMenu() {
+      dropdown.hidden = false;
+      overlay.hidden = false;
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Close account menu");
+    }
+
+    function closeAccountMenu() {
+      dropdown.hidden = true;
+      overlay.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open account menu");
+    }
+
+    toggle.addEventListener("click", () => {
+      if (dropdown.hidden) {
+        openAccountMenu();
+      } else {
+        closeAccountMenu();
+      }
+    });
+
+    overlay.addEventListener("click", closeAccountMenu);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !dropdown.hidden) {
+        closeAccountMenu();
+        toggle.focus();
+      }
+    });
+
+    dropdown.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeAccountMenu);
+    });
+  })();
+</script>
+
   <script src="radio-bridge.js"></script>
 </body>
 </html>
