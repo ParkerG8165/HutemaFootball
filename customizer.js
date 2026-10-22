@@ -134,7 +134,7 @@ function init3D() {
     1000
   );
 
-  // Position camera at 0.8 so the shoe starts at max zoom immediately on load
+  // Position camera at 0.8 (starts at your minimum zoom level)
   camera.position.set(0, 0.1, 0.8);
 
   renderer = new THREE.WebGLRenderer({
@@ -179,8 +179,8 @@ function init3D() {
     controls.dampingFactor = 0.05;
     
     // Zoom Limits:
-    controls.minDistance = 0.8;  // Maximum zoom-in size limit
-    controls.maxDistance = 2.8;  // Minimum zoom-out size limit
+    controls.minDistance = 0.533; // Max zoom-in (1.5x closer than 0.8)
+    controls.maxDistance = 0.8;   // Min zoom-out (your previous max zoom)
   }
 
   // Load 3D shoe model
