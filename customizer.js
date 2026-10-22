@@ -1,5 +1,5 @@
 /* =========================================
-   1. COLOR MAP & CONFIGURATION
+1. COLOR MAP & CONFIGURATION
    ========================================= */
 
 const COLOR_MAP = [
@@ -75,7 +75,6 @@ function getStoredSelections() {
     JSON.parse(localStorage.getItem("hutema_selectedSoleplate")) ||
     soleplateDefault;
 
-  // Convert previously saved abbreviations to the full labels.
   const soleplateNameMap = {
     FG: "Firm Ground",
     AG: "Artificial Ground",
@@ -89,7 +88,6 @@ function getStoredSelections() {
     soleplate.choice = soleplateNameMap[soleplate.choice];
   }
 
-  // Remove unsupported saved choices.
   if (!settings.soleplate.options.includes(soleplate.choice)) {
     soleplate.choice = "Firm Ground";
   }
@@ -128,14 +126,16 @@ function init3D() {
 
   scene = new THREE.Scene();
 
+  // Reduced FOV (30deg) keeps the toe box fully in view when zoomed/rotated
   camera = new THREE.PerspectiveCamera(
-    45,
+    30,
     container.clientWidth / container.clientHeight,
     0.1,
     1000
   );
 
-  camera.position.set(2.5, 1.2, 3);
+  // Position camera at 0.8 so the shoe starts at max zoom immediately on load
+  camera.position.set(0, 0.1, 0.8);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -157,30 +157,18 @@ function init3D() {
   container.appendChild(renderer.domElement);
 
   // Lighting
-  const ambientLight = new THREE.AmbientLight(
-    0xffffff,
-    1.2
-  );
-
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
   scene.add(ambientLight);
 
-  const dirLight1 = new THREE.DirectionalLight(
-    0xffffff,
-    1.8
-  );
-
+  const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
   dirLight1.position.set(5, 10, 7);
   scene.add(dirLight1);
 
-  const dirLight2 = new THREE.DirectionalLight(
-    0xffffff,
-    0.8
-  );
-
+  const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
   dirLight2.position.set(-5, -5, -5);
   scene.add(dirLight2);
 
-  // Orbit controls
+  // Orbit controls setup
   if (typeof THREE.OrbitControls !== "undefined") {
     controls = new THREE.OrbitControls(
       camera,
@@ -189,11 +177,13 @@ function init3D() {
 
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 1.5;
-    controls.maxDistance = 6;
+    
+    // Zoom Limits:
+    controls.minDistance = 0.8;  // Maximum zoom-in size limit
+    controls.maxDistance = 2.8;  // Minimum zoom-out size limit
   }
 
-  // Load the sample 3D shoe model.
+  // Load 3D shoe model
   if (typeof THREE.GLTFLoader !== "undefined") {
     const loader = new THREE.GLTFLoader();
 
@@ -202,19 +192,23 @@ function init3D() {
 
     loader.load(
       modelUrl,
-
       (gltf) => {
         bootModel = gltf.scene;
 
-        bootModel.position.set(0, -0.4, 0);
-        bootModel.scale.set(1.5, 1.5, 1.5);
+        bootModel.position.set(0, -0.15, 0);
+        bootModel.scale.set(1.1, 1.1, 1.1);
+
+        // Ensure materials are unique on meshes so upper and soleplate color independently
+        bootModel.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material = child.material.clone();
+          }
+        });
 
         scene.add(bootModel);
         update3DModel();
       },
-
       undefined,
-
       (error) => {
         console.error("Error loading 3D model:", error);
       }
@@ -222,7 +216,6 @@ function init3D() {
   }
 
   window.addEventListener("resize", onWindowResize);
-
   animate();
 }
 
@@ -256,20 +249,34 @@ function animate() {
 
 
 /* =========================================
-   4. UPDATE 3D MODEL COLOR
+   4. MULTI-PART 3D MODEL COLOR UPDATES
    ========================================= */
 
 function update3DModel() {
   if (!bootModel) return;
 
-  const currentColorHex =
-    category === "upper"
-      ? selectedUpper.colorHex
-      : selectedSoleplate.colorHex;
-
   bootModel.traverse((child) => {
     if (child.isMesh && child.material) {
-      child.material.color.set(currentColorHex);
+      const name = (child.name + " " + child.material.name).toLowerCase();
+
+      // Check if mesh/material matches soleplate keywords OR sample model material names
+      const isSoleplate =
+        name.includes("sole") ||
+        name.includes("plate") ||
+        name.includes("bottom") ||
+        name.includes("stud") ||
+        name.includes("outsole") ||
+        name.includes("rubber") ||
+        name.includes("stripe") ||
+        child.material.name === "street_shoe_sole";
+
+      if (isSoleplate) {
+        child.material.color.set(selectedSoleplate.colorHex);
+      } else {
+        child.material.color.set(selectedUpper.colorHex);
+      }
+
+      child.material.needsUpdate = true;
     }
   });
 }
@@ -301,7 +308,6 @@ function createColorPicker() {
       : selectedSoleplate.colorName;
 
   const colorArea = document.createElement("div");
-
   colorArea.className = "color-picker-area";
 
   const swatchesHTML = COLOR_MAP.map((color) => `
@@ -333,11 +339,8 @@ function createColorPicker() {
 
   optionsPanel.appendChild(colorArea);
 
-  const swatches =
-    colorArea.querySelectorAll(".color-swatch");
-
-  const colorValue =
-    colorArea.querySelector(".color-value");
+  const swatches = colorArea.querySelectorAll(".color-swatch");
+  const colorValue = colorArea.querySelector(".color-value");
 
   swatches.forEach((swatch) => {
     swatch.addEventListener("click", () => {
@@ -373,74 +376,17 @@ function createColorPicker() {
    ========================================= */
 
 function createReport() {
-  // The Upper page already contains its own receipt.
-  if (category === "upper") return;
-
-  if (document.querySelector(".customization-report")) {
+  if (category === "upper" && document.querySelector(".customization-report")) {
     return;
   }
 
-  const layout = document.querySelector(".customizer-layout");
-
-  if (!layout) return;
-
-  const report = document.createElement("aside");
-
-  report.className = "customization-report";
-
-  report.innerHTML = `
-    <h2>Custom Boot</h2>
-
-    <div class="report-divider"></div>
-
-    <h3>UPPER</h3>
-    <p>
-      <strong>Texture:</strong>
-      <span id="report-upper-texture"></span>
-    </p>
-
-    <p>
-      <strong>Block:</strong>
-      <span id="report-upper-block"></span>
-    </p>
-
-    <p>
-      <strong>Color:</strong>
-      <span id="report-upper-color"></span>
-    </p>
-
-    <div class="report-divider"></div>
-
-    <h3>SOLEPLATE</h3>
-    <p>
-      <strong>Choice:</strong>
-      <span id="report-sole-choice"></span>
-    </p>
-
-    <p>
-      <strong>Block:</strong>
-      <span id="report-sole-block"></span>
-    </p>
-
-    <p>
-      <strong>Color:</strong>
-      <span id="report-sole-color"></span>
-    </p>
-
-    <div class="report-divider"></div>
-
-    <h3>COMBINATION</h3>
-    <p id="report-combination"></p>
-  `;
-
-  layout.appendChild(report);
+  updateReport();
 }
 
 function updateReport() {
   const setText = (selectors, value) => {
     selectors.forEach((selector) => {
       const element = document.querySelector(selector);
-
       if (element) {
         element.textContent = value;
       }
@@ -607,19 +553,11 @@ if (gridElement) {
    ========================================= */
 
 if (category === "upper") {
-  const index =
-    config.options.indexOf(selectedUpper.texture);
-
-  if (index !== -1) {
-    current = index;
-  }
+  const index = config.options.indexOf(selectedUpper.texture);
+  if (index !== -1) current = index;
 } else if (category === "soleplate") {
-  const index =
-    config.options.indexOf(selectedSoleplate.choice);
-
-  if (index !== -1) {
-    current = index;
-  }
+  const index = config.options.indexOf(selectedSoleplate.choice);
+  if (index !== -1) current = index;
 }
 
 createReport();

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +6,9 @@
   <title>Soleplate Customizer | Hutema</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="customizer-page" data-category="soleplate">
+
   <header class="site-header">
     <a class="logo" href="/" aria-label="Hutema home">
       <span class="logo-mark"></span>
@@ -22,17 +24,23 @@
   </header>
 
   <main class="customizer-main">
+
     <nav class="config-tabs">
       <a href="customizer.html">Upper</a>
       <a class="active" href="soleplate.html">Soleplate</a>
     </nav>
 
     <section class="customizer-layout">
-      <div class="options-panel">
+
+      <section class="options-panel">
         <div class="option-switcher">
-          <button class="arrow-button previous" type="button">◀</button>
+          <button class="arrow-button previous" type="button"
+            aria-label="Previous soleplate choice">◀</button>
+
           <strong class="option-name">Firm Ground</strong>
-          <button class="arrow-button next" type="button">▶</button>
+
+          <button class="arrow-button next" type="button"
+            aria-label="Next soleplate choice">▶</button>
         </div>
 
         <p class="option-description">
@@ -40,17 +48,66 @@
         </p>
 
         <div class="picture-grid"></div>
-      </div>
+      </section>
 
       <section class="boot-preview">
-        <div class="boot-illustration">
-          <span class="boot-swoosh"></span>
+        <!-- 3D Viewer Container added here -->
+        <div id="webgl-container"
+          style="width: 100%; height: 420px; position: relative;">
         </div>
+
         <p>Your custom Hutema boot</p>
       </section>
+
+      <aside class="custom-boot-card">
+        <h2>Custom Boot</h2>
+        <hr>
+
+        <div class="summary-section">
+          <h3>UPPER</h3>
+          <p><strong>Texture:</strong>
+            <span id="summary-upper-texture">Leather</span>
+          </p>
+          <p><strong>Block:</strong>
+            <span id="summary-upper-block">High Sock Laces</span>
+          </p>
+          <p><strong>Color:</strong>
+            <span id="summary-upper-color">Black</span>
+          </p>
+        </div>
+
+        <hr>
+
+        <div class="summary-section">
+          <h3>SOLEPLATE</h3>
+          <p><strong>Choice:</strong>
+            <span id="summary-sole-choice">Firm Ground</span>
+          </p>
+          <p><strong>Block:</strong>
+            <span id="summary-sole-block">Accuracy/Control</span>
+          </p>
+          <p><strong>Color:</strong>
+            <span id="summary-sole-color">White</span>
+          </p>
+        </div>
+
+        <hr>
+
+        <div class="summary-section">
+          <h3>COMBINATION</h3>
+          <p id="summary-combination">
+            Leather upper with High Sock Laces in Black, paired with
+            a Firm Ground soleplate (Accuracy/Control) in White.
+          </p>
+        </div>
+      </aside>
+
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="customizer.js"></script>
   <script src="radio-bridge.js"></script>
 </body>
