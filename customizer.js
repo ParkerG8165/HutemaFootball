@@ -1,5 +1,5 @@
 /* =========================================
-1. COLOR MAP & CONFIGURATION
+   1. COLOR MAP & CONFIGURATION
    ========================================= */
 
 const COLOR_MAP = [
@@ -126,7 +126,7 @@ function init3D() {
 
   scene = new THREE.Scene();
 
-  // Reduced FOV (30deg) keeps the toe box fully in view when zoomed/rotated
+  // Reduced FOV (30deg) keeps the model fully in view when rotated
   camera = new THREE.PerspectiveCamera(
     30,
     container.clientWidth / container.clientHeight,
@@ -134,8 +134,8 @@ function init3D() {
     1000
   );
 
-  // Position camera at 0.8 (starts at your minimum zoom level)
-  camera.position.set(0, 0.1, 0.8);
+  // Position camera slightly further back (2.0) so the model appears a tiny bit smaller initially
+  camera.position.set(0, 0.2, 2.0);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -168,27 +168,29 @@ function init3D() {
   dirLight2.position.set(-5, -5, -5);
   scene.add(dirLight2);
 
-  // Orbit controls setup
-  if (typeof THREE.OrbitControls !== "undefined") {
-    controls = new THREE.OrbitControls(
-      camera,
-      renderer.domElement
-    );
+  // Orbit controls setup with adjusted zoom limits
+  try {
+    if (typeof THREE.OrbitControls === "function") {
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+    } else if (typeof OrbitControls === "function") {
+      controls = new OrbitControls(camera, renderer.domElement);
+    }
 
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    
-    // Zoom Limits:
-    controls.minDistance = 0.533; // Max zoom-in (1.5x closer than 0.8)
-    controls.maxDistance = 0.8;   // Min zoom-out (your previous max zoom)
+    if (controls) {
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.minDistance = 1.0; 
+      controls.maxDistance = 3.5;   
+    }
+  } catch (e) {
+    console.warn("OrbitControls failed to initialize:", e);
   }
 
-  // Load 3D shoe model
+  // Load custom 3D shoe model locally
   if (typeof THREE.GLTFLoader !== "undefined") {
     const loader = new THREE.GLTFLoader();
 
-    const modelUrl =
-      "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb";
+    const modelUrl = "./models/custom-shoe.glb";
 
     loader.load(
       modelUrl,
@@ -210,7 +212,7 @@ function init3D() {
       },
       undefined,
       (error) => {
-        console.error("Error loading 3D model:", error);
+        console.error("Error loading custom 3D model:", error);
       }
     );
   }
@@ -259,7 +261,6 @@ function update3DModel() {
     if (child.isMesh && child.material) {
       const name = (child.name + " " + child.material.name).toLowerCase();
 
-      // Check if mesh/material matches soleplate keywords OR sample model material names
       const isSoleplate =
         name.includes("sole") ||
         name.includes("plate") ||
@@ -268,7 +269,7 @@ function update3DModel() {
         name.includes("outsole") ||
         name.includes("rubber") ||
         name.includes("stripe") ||
-        child.material.name === "street_shoe_sole";
+        name.includes("band");
 
       if (isSoleplate) {
         child.material.color.set(selectedSoleplate.colorHex);
