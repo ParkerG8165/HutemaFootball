@@ -1,5 +1,5 @@
 /* =========================================
-   1. COLOR MAP & CONFIGURATION
+1. COLOR MAP & CONFIGURATION
    ========================================= */
 
 const COLOR_MAP = [
@@ -25,7 +25,13 @@ const settings = {
       "High Sock Laceless",
       "Low Sock Laceless",
       "Mid Sock Laceless"
-    ]
+    ],
+    // Map specific combinations. 
+    // "Synthetic_Low Sock Laceless" points to your special low-sock laceless model.
+    // Everything else falls back to your base model automatically.
+    modelMap: {
+      "Synthetic_Low Sock Laceless": "./models/Syntheticlowsocklaceless.glb"
+    }
   },
 
   soleplate: {
@@ -118,6 +124,7 @@ function saveSelections() {
    ========================================= */
 
 let scene, camera, renderer, controls, bootModel;
+let currentLoadedModelPath = "";
 
 function init3D() {
   const container = document.getElementById("webgl-container");
@@ -134,8 +141,8 @@ function init3D() {
     1000
   );
 
-  // Position camera slightly further back (2.0) so the model appears a tiny bit smaller initially
-  camera.position.set(0, 0.2, 2.0);
+  // Position camera starting at max zoom distance
+  camera.position.set(2, 1.5, 3).normalize().multiplyScalar(5.0);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -186,39 +193,61 @@ function init3D() {
     console.warn("OrbitControls failed to initialize:", e);
   }
 
-  // Load custom 3D shoe model locally
-  if (typeof THREE.GLTFLoader !== "undefined") {
-    const loader = new THREE.GLTFLoader();
-
-    const modelUrl = "./models/custom-shoe.glb";
-
-    loader.load(
-      modelUrl,
-      (gltf) => {
-        bootModel = gltf.scene;
-
-        bootModel.position.set(0, -0.15, 0);
-        bootModel.scale.set(1.1, 1.1, 1.1);
-
-        // Ensure materials are unique on meshes so upper and soleplate color independently
-        bootModel.traverse((child) => {
-          if (child.isMesh && child.material) {
-            child.material = child.material.clone();
-          }
-        });
-
-        scene.add(bootModel);
-        update3DModel();
-      },
-      undefined,
-      (error) => {
-        console.error("Error loading custom 3D model:", error);
-      }
-    );
-  }
+  // Load custom 3D shoe model dynamically
+  loadCurrentModel();
 
   window.addEventListener("resize", onWindowResize);
   animate();
+}
+
+function loadCurrentModel() {
+  if (typeof THREE.GLTFLoader === "undefined") return;
+
+  // Default fallback model path
+  let modelUrl = "./models/custom-shoe.glb";
+
+  if (category === "upper" && settings.upper.modelMap) {
+    const lookupKey = `${selectedUpper.texture}_${selectedUpper.block}`;
+    // If a specific model is mapped for this texture + block combination, use it; otherwise fallback
+    if (settings.upper.modelMap[lookupKey]) {
+      modelUrl = settings.upper.modelMap[lookupKey];
+    }
+  }
+
+  if (currentLoadedModelPath === modelUrl && bootModel) {
+    update3DModel();
+    return;
+  }
+
+  currentLoadedModelPath = modelUrl;
+  const loader = new THREE.GLTFLoader();
+
+  loader.load(
+    modelUrl,
+    (gltf) => {
+      if (bootModel) {
+        scene.remove(bootModel);
+      }
+
+      bootModel = gltf.scene;
+      bootModel.position.set(0, -0.15, 0);
+      bootModel.scale.set(1.1, 1.1, 1.1);
+
+      // Ensure materials are unique on meshes so upper and soleplate color independently
+      bootModel.traverse((child) => {
+        if (child.isMesh && child.material) {
+          child.material = child.material.clone();
+        }
+      });
+
+      scene.add(bootModel);
+      update3DModel();
+    },
+    undefined,
+    (error) => {
+      console.error("Error loading 3D model from " + modelUrl + ":", error);
+    }
+  );
 }
 
 function onWindowResize() {
@@ -507,6 +536,7 @@ if (prevBtn) {
       config.options.length;
 
     render();
+    loadCurrentModel(); // Refresh model when texture arrow changes
   });
 }
 
@@ -518,6 +548,7 @@ if (nextBtn) {
       (current + 1) % config.options.length;
 
     render();
+    loadCurrentModel(); // Refresh model when texture arrow changes
   });
 }
 
@@ -544,14 +575,11 @@ if (gridElement) {
     saveSelections();
     createColorPicker();
     updateReport();
-    update3DModel();
+    
+    // Dynamically load model based on current block/texture combination
+    loadCurrentModel();
   });
 }
-
-
-/* =========================================
-   9. INITIALIZE PAGE
-   ========================================= */
 
 if (category === "upper") {
   const index = config.options.indexOf(selectedUpper.texture);
