@@ -26,11 +26,10 @@ const settings = {
       "Low Sock Laceless",
       "Mid Sock Laceless"
     ],
-    // Map specific combinations. 
-    // "Synthetic_Low Sock Laceless" points to your special low-sock laceless model.
-    // Everything else falls back to your base model automatically.
+    // Map your custom upper models here. Everything else safely uses custom-shoe.glb fallback.
     modelMap: {
-      "Synthetic_Low Sock Laceless": "./models/Syntheticlowsocklaceless.glb"
+      "Synthetic_Low Sock Laceless": "./models/Syntheticlowsocklaceless.glb",
+      "Synthetic_Low Sock Laces": "./models/Syntheticlowsocklaces.glb"
     }
   },
 
@@ -41,7 +40,12 @@ const settings = {
       "Accuracy/Control",
       "Speed",
       "Defense"
-    ]
+    ],
+    // Map your soleplate models here. Everything else safely uses a base soleplate fallback.
+    modelMap: {
+      "Firm Ground_Accuracy/Control": "./models/Fgaccuracysoleplate.glb",
+      "Firm Ground_Defense": "./models/Fgdefensesoleplate.glb"
+    }
   }
 };
 
@@ -123,8 +127,13 @@ function saveSelections() {
    3. 3D WEBGL ENGINE SETUP
    ========================================= */
 
-let scene, camera, renderer, controls, bootModel;
-let currentLoadedModelPath = "";
+let scene, camera, renderer, controls;
+let cleatGroup = null;
+let currentUpperMesh = null;
+let currentSoleplateMesh = null;
+
+let loadedUpperPath = "";
+let loadedSoleplatePath = "";
 
 function init3D() {
   const container = document.getElementById("webgl-container");
@@ -133,7 +142,6 @@ function init3D() {
 
   scene = new THREE.Scene();
 
-  // Reduced FOV (30deg) keeps the model fully in view when rotated
   camera = new THREE.PerspectiveCamera(
     30,
     container.clientWidth / container.clientHeight,
@@ -149,15 +157,8 @@ function init3D() {
     alpha: true
   });
 
-  renderer.setSize(
-    container.clientWidth,
-    container.clientHeight
-  );
-
-  renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
-  );
-
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
 
@@ -175,7 +176,7 @@ function init3D() {
   dirLight2.position.set(-5, -5, -5);
   scene.add(dirLight2);
 
-  // Orbit controls setup with adjusted zoom limits
+  // Orbit controls setup
   try {
     if (typeof THREE.OrbitControls === "function") {
       controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -186,129 +187,162 @@ function init3D() {
     if (controls) {
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
-      controls.minDistance = 1.0; 
-      controls.maxDistance = 3.5;   
+      controls.minDistance = 1.0;
+      controls.maxDistance = 3.5;
     }
   } catch (e) {
     console.warn("OrbitControls failed to initialize:", e);
   }
 
-  // Load custom 3D shoe model dynamically
-  loadCurrentModel();
+  // Create parent container for the combined cleat
+  cleatGroup = new THREE.Group();
+  cleatGroup.position.set(0, -0.15, 0);
+  cleatGroup.scale.set(1.1, 1.1, 1.1);
+  scene.add(cleatGroup);
+
+  loadedUpperPath = "";
+  loadedSoleplatePath = "";
+
+  loadCleatModels();
 
   window.addEventListener("resize", onWindowResize);
   animate();
 }
 
-function loadCurrentModel() {
-  if (typeof THREE.GLTFLoader === "undefined") return;
+function loadCleatModels() {
+  if (typeof THREE.GLTFLoader === "undefined" || !cleatGroup) return;
 
-  // Default fallback model path
-  let modelUrl = "./models/custom-shoe.glb";
-
-  if (category === "upper" && settings.upper.modelMap) {
-    const lookupKey = `${selectedUpper.texture}_${selectedUpper.block}`;
-    // If a specific model is mapped for this texture + block combination, use it; otherwise fallback
-    if (settings.upper.modelMap[lookupKey]) {
-      modelUrl = settings.upper.modelMap[lookupKey];
-    }
-  }
-
-  if (currentLoadedModelPath === modelUrl && bootModel) {
-    update3DModel();
-    return;
-  }
-
-  currentLoadedModelPath = modelUrl;
   const loader = new THREE.GLTFLoader();
 
-  loader.load(
-    modelUrl,
-    (gltf) => {
-      if (bootModel) {
-        scene.remove(bootModel);
+  // 1. Determine Upper Model URL with safe fallback
+  let upperUrl = "./models/custom-shoe.glb";
+  const upperKey = `${selectedUpper.texture}_${selectedUpper.block}`;
+
+  if (settings.upper.modelMap) {
+    if (settings.upper.modelMap[upperKey]) {
+      upperUrl = settings.upper.modelMap[upperKey];
+    } else {
+      const foundKey = Object.keys(settings.upper.modelMap).find(
+        (k) => k.toLowerCase() === upperKey.toLowerCase()
+      );
+      if (foundKey) {
+        upperUrl = settings.upper.modelMap[foundKey];
       }
-
-      bootModel = gltf.scene;
-      bootModel.position.set(0, -0.15, 0);
-      bootModel.scale.set(1.1, 1.1, 1.1);
-
-      // Ensure materials are unique on meshes so upper and soleplate color independently
-      bootModel.traverse((child) => {
-        if (child.isMesh && child.material) {
-          child.material = child.material.clone();
-        }
-      });
-
-      scene.add(bootModel);
-      update3DModel();
-    },
-    undefined,
-    (error) => {
-      console.error("Error loading 3D model from " + modelUrl + ":", error);
     }
-  );
+  }
+
+  // 2. Determine Soleplate Model URL with safe fallback
+  let soleplateUrl = "./models/Fgaccuracysoleplate.glb"; // General fallback soleplate
+  const soleplateKey = `${selectedSoleplate.choice}_${selectedSoleplate.block}`;
+
+  if (settings.soleplate.modelMap) {
+    if (settings.soleplate.modelMap[soleplateKey]) {
+      soleplateUrl = settings.soleplate.modelMap[soleplateKey];
+    } else {
+      const foundSoleKey = Object.keys(settings.soleplate.modelMap).find(
+        (k) => k.toLowerCase() === soleplateKey.toLowerCase()
+      );
+      if (foundSoleKey) {
+        soleplateUrl = settings.soleplate.modelMap[foundSoleKey];
+      }
+    }
+  }
+
+  // Load Upper if path changes
+  if (loadedUpperPath !== upperUrl) {
+    loadedUpperPath = upperUrl;
+    loader.load(
+      upperUrl,
+      (gltf) => {
+        if (currentUpperMesh) cleatGroup.remove(currentUpperMesh);
+        currentUpperMesh = gltf.scene;
+
+        currentUpperMesh.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material = child.material.clone();
+          }
+        });
+
+        cleatGroup.add(currentUpperMesh);
+        applyColors();
+      },
+      undefined,
+      (err) => {
+        console.error("Failed to load upper model at:", upperUrl, err);
+        loadedUpperPath = "";
+      }
+    );
+  }
+
+  // Load Soleplate if path changes
+  if (loadedSoleplatePath !== soleplateUrl) {
+    loadedSoleplatePath = soleplateUrl;
+    loader.load(
+      soleplateUrl,
+      (gltf) => {
+        if (currentSoleplateMesh) cleatGroup.remove(currentSoleplateMesh);
+        currentSoleplateMesh = gltf.scene;
+
+        currentSoleplateMesh.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material = child.material.clone();
+          }
+        });
+
+        cleatGroup.add(currentSoleplateMesh);
+        applyColors();
+      },
+      undefined,
+      (err) => {
+        console.error("Failed to load soleplate model at:", soleplateUrl, err);
+        loadedSoleplatePath = "";
+      }
+    );
+  }
 }
 
 function onWindowResize() {
   const container = document.getElementById("webgl-container");
-
   if (!container || !renderer || !camera) return;
 
-  camera.aspect =
-    container.clientWidth / container.clientHeight;
-
+  camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
-
-  renderer.setSize(
-    container.clientWidth,
-    container.clientHeight
-  );
+  renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
 function animate() {
   requestAnimationFrame(animate);
-
-  if (controls) {
-    controls.update();
-  }
-
-  if (renderer && scene && camera) {
-    renderer.render(scene, camera);
-  }
+  if (controls) controls.update();
+  if (renderer && scene && camera) renderer.render(scene, camera);
 }
 
 
 /* =========================================
-   4. MULTI-PART 3D MODEL COLOR UPDATES
+   4. INDEPENDENT COLOR APPLICATION
    ========================================= */
 
-function update3DModel() {
-  if (!bootModel) return;
-
-  bootModel.traverse((child) => {
-    if (child.isMesh && child.material) {
-      const name = (child.name + " " + child.material.name).toLowerCase();
-
-      const isSoleplate =
-        name.includes("sole") ||
-        name.includes("plate") ||
-        name.includes("bottom") ||
-        name.includes("stud") ||
-        name.includes("outsole") ||
-        name.includes("rubber") ||
-        name.includes("stripe") ||
-        name.includes("band");
-
-      if (isSoleplate) {
-        child.material.color.set(selectedSoleplate.colorHex);
-      } else {
+function applyColors() {
+  if (currentUpperMesh) {
+    currentUpperMesh.traverse((child) => {
+      if (child.isMesh && child.material) {
         child.material.color.set(selectedUpper.colorHex);
+        child.material.needsUpdate = true;
       }
+    });
+  }
 
-      child.material.needsUpdate = true;
-    }
-  });
+  if (currentSoleplateMesh) {
+    currentSoleplateMesh.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.color.set(selectedSoleplate.colorHex);
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+}
+
+function update3DModel() {
+  applyColors();
 }
 
 
@@ -318,13 +352,9 @@ function update3DModel() {
 
 function createColorPicker() {
   const existing = document.querySelector(".color-picker-area");
-
-  if (existing) {
-    existing.remove();
-  }
+  if (existing) existing.remove();
 
   const optionsPanel = document.querySelector(".options-panel");
-
   if (!optionsPanel) return;
 
   const currentColorHex =
@@ -340,7 +370,8 @@ function createColorPicker() {
   const colorArea = document.createElement("div");
   colorArea.className = "color-picker-area";
 
-  const swatchesHTML = COLOR_MAP.map((color) => `
+  const swatchesHTML = COLOR_MAP.map(
+    (color) => `
     <button
       type="button"
       class="color-swatch${
@@ -354,7 +385,8 @@ function createColorPicker() {
       title="${color.name}"
       aria-label="${color.name}"
     ></button>
-  `).join("");
+  `
+  ).join("");
 
   colorArea.innerHTML = `
     <label>
@@ -395,7 +427,7 @@ function createColorPicker() {
 
       saveSelections();
       updateReport();
-      update3DModel();
+      applyColors();
     });
   });
 }
@@ -409,7 +441,6 @@ function createReport() {
   if (category === "upper" && document.querySelector(".customization-report")) {
     return;
   }
-
   updateReport();
 }
 
@@ -417,9 +448,7 @@ function updateReport() {
   const setText = (selectors, value) => {
     selectors.forEach((selector) => {
       const element = document.querySelector(selector);
-      if (element) {
-        element.textContent = value;
-      }
+      if (element) element.textContent = value;
     });
   };
 
@@ -427,12 +456,10 @@ function updateReport() {
     ["#summary-upper-texture", "#report-upper-texture"],
     selectedUpper.texture
   );
-
   setText(
     ["#summary-upper-block", "#report-upper-block"],
     selectedUpper.block
   );
-
   setText(
     ["#summary-upper-color", "#report-upper-color"],
     selectedUpper.colorName
@@ -442,12 +469,10 @@ function updateReport() {
     ["#summary-sole-choice", "#report-sole-choice"],
     selectedSoleplate.choice
   );
-
   setText(
     ["#summary-sole-block", "#report-sole-block"],
     selectedSoleplate.block
   );
-
   setText(
     ["#summary-sole-color", "#report-sole-color"],
     selectedSoleplate.colorName
@@ -460,10 +485,7 @@ function updateReport() {
     `(${selectedSoleplate.block}) in ` +
     `${selectedSoleplate.colorName}.`;
 
-  setText(
-    ["#summary-combination", "#report-combination"],
-    combination
-  );
+  setText(["#summary-combination", "#report-combination"], combination);
 }
 
 
@@ -480,9 +502,7 @@ function render() {
   }
 
   const activeBlock =
-    category === "upper"
-      ? selectedUpper.block
-      : selectedSoleplate.block;
+    category === "upper" ? selectedUpper.block : selectedSoleplate.block;
 
   if (gridElement) {
     gridElement.innerHTML = config.blocks
@@ -498,11 +518,7 @@ function render() {
             <span>${blockName}</span>
 
             <small>
-              ${
-                category === "soleplate"
-                  ? label
-                  : `${option} · ${label}`
-              }
+              ${category === "soleplate" ? label : `${option} · ${label}`}
             </small>
           </button>
         `
@@ -519,24 +535,20 @@ function render() {
   saveSelections();
   createColorPicker();
   updateReport();
-  update3DModel();
+  loadCleatModels();
 }
 
 
 /* =========================================
-   8. EVENT LISTENERS
+   8. EVENT LISTENERS & INITIALIZATION
    ========================================= */
 
 const prevBtn = document.querySelector(".previous");
 
 if (prevBtn) {
   prevBtn.addEventListener("click", () => {
-    current =
-      (current - 1 + config.options.length) %
-      config.options.length;
-
+    current = (current - 1 + config.options.length) % config.options.length;
     render();
-    loadCurrentModel(); // Refresh model when texture arrow changes
   });
 }
 
@@ -544,24 +556,17 @@ const nextBtn = document.querySelector(".next");
 
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
-    current =
-      (current + 1) % config.options.length;
-
+    current = (current + 1) % config.options.length;
     render();
-    loadCurrentModel(); // Refresh model when texture arrow changes
   });
 }
 
 if (gridElement) {
   gridElement.addEventListener("click", (event) => {
     const card = event.target.closest(".picture-card");
-
     if (!card) return;
 
-    gridElement
-      .querySelector(".selected")
-      ?.classList.remove("selected");
-
+    gridElement.querySelector(".selected")?.classList.remove("selected");
     card.classList.add("selected");
 
     const block = card.dataset.block;
@@ -575,9 +580,7 @@ if (gridElement) {
     saveSelections();
     createColorPicker();
     updateReport();
-    
-    // Dynamically load model based on current block/texture combination
-    loadCurrentModel();
+    loadCleatModels();
   });
 }
 
@@ -590,5 +593,5 @@ if (category === "upper") {
 }
 
 createReport();
-render();
 init3D();
+render();
